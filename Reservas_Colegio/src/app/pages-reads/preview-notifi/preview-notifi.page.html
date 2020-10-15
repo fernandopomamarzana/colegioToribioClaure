@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon name="close">
+      </ion-icon>
+    </ion-button>
+    <ion-title class="ion-text-center">Boletín Individual</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h3><u>De: {{autor}}</u> </h3>
+  <p><strong>Alumno:</strong>  {{estudiante}}</p>
+  <p><strong>Curso:</strong>  {{curso}}</p>
+  <p><strong>Motivo:</strong>  {{mesage}}</p>
+</ion-content>

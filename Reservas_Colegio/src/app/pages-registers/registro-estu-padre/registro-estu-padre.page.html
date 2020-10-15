@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon name="close">
+      </ion-icon>
+    </ion-button>
+    <ion-title class="ion-text-center">Pasar de curso a los Alumnos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item >
+    <ion-label > Cursos</ion-label>
+    <ion-select  mode="ios"  required interface="popover" placeholder="--Selecciona un Curso--"   [(ngModel)]="cur"  >
+      <div *ngFor="let curso of cursos" >
+        <ion-select-option  [value]="curso.name" >{{curso.name}}</ion-select-option>
+      </div>
+    </ion-select>
+  </ion-item>
+  <ion-button  color="primary" (click)="pasar()">Pasar de curso<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+<hr>
+  <div *ngFor="let user of usuarios" style="border-top: 1px solid rgb(192, 192, 192);">
+    <div>
+      <ion-item >
+        <ion-label >
+          <h3><strong>Nombre de Alumno: </strong> {{user.nombre}}</h3>
+          <p><strong>Ci de Alumno: </strong> {{user.ci}}</p>
+          <p><strong>Telefóno de Alumno: </strong> {{user.numero_telefonico}}</p>
+          <p><strong>Promedio: </strong> {{user.promedio}} Pts.</p>
+        </ion-label>
+      </ion-item>
+
+
+    </div>
+  </div>
+</ion-content>

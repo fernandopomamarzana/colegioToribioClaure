@@ -1,0 +1,35 @@
+
+<ion-header  [translucent]="true">
+  <ion-toolbar class="heder" >
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Unidad Educativa Toribio Claure</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen #content class="ion-padding" scroll-y="true">
+  <div  class="ion-padding" >
+    <h3 class="ion-text-center"><strong><u>Iniciar Session</u></strong> </h3>
+    <span style="--background: transparent"  >
+       <div class="image">
+         <img src="../assets/imgs/logo.png">
+       </div>
+      <!-- <ion-label >
+        <p><strong>U.E. Toribio Claure</strong></p>
+      </ion-label> -->
+    </span>
+    <ion-item >
+      <ion-label ><strong>Usuario:</strong></ion-label>
+      <ion-input slot="end" placeholder="Usuario" [(ngModel)]="username" required #autofocus maxlength="20" ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label ><strong>Contraceña:</strong></ion-label>
+      <ion-input type="password" slot="end" placeholder="Contraceña" [(ngModel)]="password" required #autofocus maxlength="20" ></ion-input>
+    </ion-item>
+  
+    <ion-button  slot="end" (click)="formu(username,password)" >Iniciar Sesion</ion-button>
+  
+  </div>
+
+</ion-content>

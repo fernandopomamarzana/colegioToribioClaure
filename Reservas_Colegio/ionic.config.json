@@ -1,0 +1,8 @@
+{
+  "name": "Reservas_Colegio",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,201 @@
+<ion-app >
+  <ion-split-pane  contentId="main-content">
+    
+    <ion-menu *ngIf="cargo==''" contentId="main-content" type="overlay">
+      <ion-content class="menu"style="--background:transparent">
+        <div style="position: relative;top:-15px;--background: #E4FFBB;background: #E4FFBB;">
+          <ion-item style="--background: transparent;border-bottom: 1px solid #064b0c;" button  >
+            <ion-avatar  slot="start" style="height:30%; width:30%">
+              <img src="../assets/imgs/logo.png">
+            </ion-avatar>
+            <ion-label >
+              <p><strong>U.E. Toribio Claure</strong></p>
+            </ion-label>
+          </ion-item>
+        </div>
+        
+        <ion-list class="ion-padding" id="inbox-list" >
+          <div style=" border-radius: 5px;">
+            <ion-menu-toggle   auto-hide="false" >
+              <ion-item routerDirection="root" routerLink="/login" lines="none">
+                <ion-icon slot="start" ios="enter-outline" md="enter-sharp" ></ion-icon>
+                <ion-label >
+                  <h2><strong> Iniciar Sesion</strong></h2>
+                </ion-label>
+              </ion-item>
+              <ion-item   routerDirection="root" routerLink="/menu" lines="none" detail="false" >
+                <ion-icon slot="start" ios="home-outline" md="home-sharp" ></ion-icon>
+                <ion-label><h2>Menu</h2></ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+        </ion-list>
+
+      </ion-content>
+    </ion-menu>
+    
+    <ion-menu *ngIf="cargo=='Directora' || cargo=='Director'" contentId="main-content" type="overlay">
+      <ion-content class="menu"style="--background:transparent">
+        <div style="position: relative;top:-15px;--background: #E4FFBB;background: #E4FFBB;">
+          <ion-item style="--background: transparent;border-bottom: 1px solid #064b0c;" button  >
+            <ion-avatar  slot="start" style="height:30%; width:30%">
+              <img src="../assets/imgs/logo.png">
+            </ion-avatar>
+            <ion-label >
+              <p><strong>Nombre: </strong>{{name}}</p>
+              <p><strong>Apellido: </strong>{{apellido}}</p>
+              <p><strong>Ci: </strong>{{ci}}</p>
+              <p><strong>Cargo: </strong>{{cargo}}</p>
+            </ion-label>
+          </ion-item>
+        </div>
+        
+        <ion-list class="ion-padding" id="inbox-list" >
+          <ion-item class="logout" (click)="logout()" > 
+            <ion-icon slot="start" style="transform: rotate(180deg);font-size: 30px;" ios="enter-outline" md="enter-sharp" ></ion-icon>
+            <ion-label >
+              <h2><strong>Cerrar Sesion</strong> </h2>
+            </ion-label>
+          </ion-item>
+          <div style=" border-radius: 5px;">
+            <ion-menu-toggle   auto-hide="false" *ngFor="let p of appPages; let i = index">
+              <ion-item  (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
+                <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label><h2>{{ p.title }}</h2></ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+        </ion-list>
+
+      </ion-content>
+    </ion-menu>
+
+
+
+    <ion-menu *ngIf="cargo=='Profesora' || cargo=='Profesor'" contentId="main-content" type="overlay">
+      <ion-content class="menu"style="--background:transparent">
+        <div style="position: relative;top:-15px;--background: #E4FFBB;background: #E4FFBB;">
+          <ion-item style="--background: transparent;border-bottom: 1px solid #064b0c;" button  >
+            <ion-avatar  slot="start" style="height:30%; width:30%">
+              <img src="../assets/imgs/logo.png">
+            </ion-avatar>
+            <ion-label >
+              <p><strong>Nombre: </strong>{{name}}</p>
+              <p><strong>Apellido: </strong>{{apellido}}</p>
+              <p><strong>Ci: </strong>{{ci}}</p>
+              <p><strong>Cargo: </strong>{{cargo}}</p>
+              
+            </ion-label>
+          </ion-item>
+        </div>
+        
+        <ion-list class="ion-padding" id="inbox-list" >
+          <ion-item class="logout" (click)="logout()" > 
+            <ion-icon slot="start" style="transform: rotate(180deg);font-size: 30px;" ios="enter-outline" md="enter-sharp" ></ion-icon>
+            <ion-label >
+              <h2><strong>Cerrar Sesion</strong> </h2>
+            </ion-label>
+          </ion-item>
+          <div style=" border-radius: 5px;">
+            <ion-menu-toggle   auto-hide="false" *ngFor="let p of appPages_profesor; let i = index">
+              <ion-item  (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
+                <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label><h2>{{ p.title }}</h2></ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+        </ion-list>
+
+        <!-- <ion-list style="background-color: transparent;" id="labels-list">
+          <h3 style="text-decoration-line: underline;text-align: center;">Etiquetas</h3>
+          <div style=" border-radius: 5px;">
+      
+          <ion-item  *ngFor="let label of labels" lines="none">
+            <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+            <ion-label>{{ label }}</ion-label>
+          </ion-item></div>
+        </ion-list> -->
+      
+      </ion-content>
+    </ion-menu>
+
+
+
+
+    <ion-menu *ngIf="cargo=='Tutor'" contentId="main-content" type="overlay">
+      <ion-content class="menu"style="--background:transparent">
+        <div style="position: relative;top:-15px;--background: #E4FFBB;background: #E4FFBB;">
+          <ion-item style="--background: transparent;border-bottom: 1px solid #064b0c;" button  >
+            <ion-avatar  slot="start" style="height:30%; width:30%">
+              <img src="../assets/imgs/logo.png">
+            </ion-avatar>
+            <ion-label >
+              <p><strong>Nombre: </strong>{{name}}</p>
+              <p><strong>Apellido: </strong>{{apellido}}</p>
+              <p><strong>Ci: </strong>{{ci}}</p>
+              <p><strong>Cargo: </strong>{{cargo}}</p>
+              
+            </ion-label>
+          </ion-item>
+        </div>
+        
+        <ion-list class="ion-padding" id="inbox-list" >
+          <ion-item class="logout" (click)="logout()" > 
+            <ion-icon slot="start" style="transform: rotate(180deg);font-size: 30px;" ios="enter-outline" md="enter-sharp" ></ion-icon>
+            <ion-label >
+              <h2><strong>Cerrar Sesion</strong> </h2>
+            </ion-label>
+          </ion-item>
+          <div style=" border-radius: 5px;">
+            <ion-menu-toggle   auto-hide="false" *ngFor="let p of appPages_tutor; let i = index">
+              <ion-item  (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
+                <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label><h2>{{ p.title }}</h2></ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    
+
+    <ion-menu *ngIf="cargo=='Estudiante'" contentId="main-content" type="overlay">
+      <ion-content class="menu"style="--background:transparent">
+        <div style="position: relative;top:-15px;--background: #E4FFBB;background: #E4FFBB;">
+          <ion-item style="--background: transparent;border-bottom: 1px solid #064b0c;" button  >
+            <ion-avatar  slot="start" style="height:30%; width:30%">
+              <img src="../assets/imgs/logo.png">
+            </ion-avatar>
+            <ion-label >
+              <p><strong>Nombre: </strong>{{name}}</p>
+              <p><strong>Apellido: </strong>{{apellido}}</p>
+              <p><strong>Ci: </strong>{{ci}}</p>
+              <p><strong *ngIf="cargo=='Estudiante'">Cargo: </strong>Alumno</p>
+              
+            </ion-label>
+          </ion-item>
+        </div>
+        
+        <ion-list class="ion-padding" id="inbox-list" >
+          <ion-item class="logout" (click)="logout()" > 
+            <ion-icon slot="start" style="transform: rotate(180deg);font-size: 30px;" ios="enter-outline" md="enter-sharp" ></ion-icon>
+            <ion-label >
+              <h2><strong>Cerrar Sesion</strong> </h2>
+            </ion-label>
+          </ion-item>
+          <div style=" border-radius: 5px;">
+            <ion-menu-toggle   auto-hide="false" *ngFor="let p of appPages_estudiante; let i = index">
+              <ion-item  (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
+                <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label><h2>{{ p.title }}</h2></ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

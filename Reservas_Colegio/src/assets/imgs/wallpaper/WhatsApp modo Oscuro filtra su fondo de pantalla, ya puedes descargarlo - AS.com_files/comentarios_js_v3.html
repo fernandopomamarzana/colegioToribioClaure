@@ -1,0 +1,443 @@
+if (typeof ESKUP == "undefined" || !ESKUP) {
+    var ESKUP = {};
+}
+
+
+ESKUP.isOpera= null;ESKUP.isSafari = null;ESKUP.isGecko= null;ESKUP.isIE = null;ESKUP.userAgent = null;ESKUP.ua= null;
+ESKUP.userAgent = navigator.userAgent.toLowerCase();
+ESKUP.ua        = navigator.userAgent;
+ESKUP.userAgentMatches = null;
+
+if ((/KHTML/).test(ESKUP.ua)) {
+    ESKUP.isSafari=1;
+}
+ESKUP.userAgentMatches=ESKUP.ua.match(/AppleWebKit\/([^\s]*)/);
+if (ESKUP.userAgentMatches&&ESKUP.userAgentMatches[1]) {
+    ESKUP.isSafari=parseFloat(ESKUP.userAgentMatches[1]);
+}
+if (!ESKUP.isSafari) {
+    ESKUP.userAgentMatches=ESKUP.ua.match(/Opera[\s\/]([^\s]*)/);
+    if (ESKUP.userAgentMatches&&ESKUP.userAgentMatches[1]) {
+        ESKUP.isOpera=parseFloat(ESKUP.userAgentMatches[1]);
+    } else {
+        ESKUP.userAgentMatches=ESKUP.ua.match(/MSIE\s([^;]*)/);
+        if (ESKUP.userAgentMatches&&ESKUP.userAgentMatches[1]) {
+            ESKUP.isIE=parseFloat(ESKUP.userAgentMatches[1]);
+        } else {
+            ESKUP.userAgentMatches=ESKUP.ua.match(/Gecko\/([^\s]*)/);
+            if (ESKUP.userAgentMatches) {
+                ESKUP.isGecko=1;
+            }
+        }
+    }
+}
+
+ESKUP.resizeIframeESKUP = function(frameId, newHeight){
+    if (document.getElementById(frameId)) {
+        document.getElementById(frameId).height = parseInt(newHeight) + "px";
+    }
+}
+
+/**
+ * Funcion que posiciona la pagina en el frame del que pasamos el id
+ * opcionalmente podemos pasar un numero de pixels para desplazar de 
+ * ese div ,por ej para dar un poco de margen
+ */
+ESKUP.setScrollToWidgetESKUP = function(frameId,extrapos) {
+    extrapos = typeof extrapos !== 'undefined' ? extrapos : 0;
+    if (typeof EPETUtils_posicionarScrollEnPagina == 'function' &&
+        typeof EPETUtils_calcAbsPositionV2        == 'function') {
+        EPETUtils_posicionarScrollEnPagina(EPETUtils_calcAbsPositionV2(document.getElementById(frameId))[1]+extrapos)
+    } else {
+        location.href = "#a_" + frameId;
+    }
+}
+
+ESKUP.setNombreUsuario = function(frameId, nombre){
+    if (document.getElementById('nickname_'+frameId)) {
+        document.getElementById('nickname_'+frameId).innerHTML = decodeURIComponent(nombre);
+    }
+}
+
+var dispositivoMovil =( (ESKUP.userAgent.indexOf("iphone") > -1) || (ESKUP.userAgent.indexOf("ipad") > -1)) || ESKUP.userAgent.indexOf("android") > -1 || ESKUP.userAgent.indexOf("mobile") > -1;
+
+ESKUP.receiveMessageESKUP = function(event) {
+    var urlsReceiveMessage = "|" + ESKUP.urlsReceiveMessage.join("|") + "|";
+    var domainAllowed      = false;
+    // Verificamos si nos fiamos del dominio emisor del mensaje
+    if (urlsReceiveMessage.indexOf(event.origin) != -1) {
+        domainAllowed = true;
+    } else if (ESKUP.expUrlReceiveMessage.length>0) {
+		for(var i=0;i<ESKUP.expUrlReceiveMessage.length;i++){
+	        var urlRegExp = new RegExp(ESKUP.expUrlReceiveMessage[i], "i");
+    	    if (event.origin.match(urlRegExp)) {
+        	    domainAllowed = true;
+	        }	
+		}	
+    }
+
+    if (!domainAllowed) {
+        return;
+    } else {
+        var _cmdHashWidgetEskup = null;
+        try {
+            eval ("_cmdHashWidgetEskup = " + event.data);
+        } catch (e) {
+            return;
+        }
+        if (_cmdHashWidgetEskup.command == "ampliaFotoEskup") {
+            // Cargamos, si no lo estan, el JS y el CSS
+            ESKUP.files.add("//skp00.epimg.net/Estilos/v1.x/v1.0/eskup_ampliar_foto.css","css");
+            ESKUP.files.add("//skp00.epimg.net/JS/eskup_ampliarfoto-20151117-01.js","js", function() {
+                ESKUPcrearTelonMultimedia();
+                ESKUPampliaFotoCallback(null,_cmdHashWidgetEskup.params[0],_cmdHashWidgetEskup.params[1],_cmdHashWidgetEskup.params[2],_cmdHashWidgetEskup.params[3]);
+            });
+        }else if (_cmdHashWidgetEskup.command == "resizeIframe") {
+            ESKUP.resizeIframeESKUP(_cmdHashWidgetEskup.id, _cmdHashWidgetEskup.params[0]);
+        } else if (_cmdHashWidgetEskup.command == "setScrollToWidget") {
+            if(typeof _cmdHashWidgetEskup.params[0] != 'undefined' && _cmdHashWidgetEskup.params[0] != ''){
+                ESKUP.setScrollToWidgetESKUP(_cmdHashWidgetEskup.id,_cmdHashWidgetEskup.params[0]);
+            }else{
+                ESKUP.setScrollToWidgetESKUP(_cmdHashWidgetEskup.id);
+            }
+        } else if (_cmdHashWidgetEskup.command == "setNumMensajes") {
+            if (ESKUP.onReceiveNumMensajes[_cmdHashWidgetEskup.id]) {
+                var callbackNumMensajes = ESKUP.onReceiveNumMensajes[_cmdHashWidgetEskup.id];
+                callbackNumMensajes(_cmdHashWidgetEskup.params[0]);
+            }
+        } else if (_cmdHashWidgetEskup.command == "setNombreUsuario") {
+            ESKUP.setNombreUsuario(_cmdHashWidgetEskup.id, _cmdHashWidgetEskup.params[0]);
+        } else if (_cmdHashWidgetEskup.command == "trackWidgetNewInfo") {
+            if (ESKUP.onTrackWidgetNewInfo[_cmdHashWidgetEskup.id]) {
+                var callbackNewInfo = ESKUP.onTrackWidgetNewInfo[_cmdHashWidgetEskup.id];
+                callbackNewInfo();
+            }
+        } else if (_cmdHashWidgetEskup.command == "trackWidgetNewComment") {
+            if (ESKUP.onTrackWidgetNewComment[_cmdHashWidgetEskup.id]) {
+                var callbackNewComment = ESKUP.onTrackWidgetNewComment[_cmdHashWidgetEskup.id];
+                callbackNewComment();
+            }
+        }else if (_cmdHashWidgetEskup.command == "showlink"){
+            //Mostramos el enlace a la conversacion completa
+            var divlink = document.getElementById('div'+'backlink_wc');
+            if(typeof divlink != 'undefined' && divlink != null){ 
+                divlink.style.display = '';
+            }          
+        }
+    }
+}
+
+/*
+ * Funcion de envio de mensajes a iframes hijos recibira el id del iframe destino,
+ * comando (accion a realizar) y parametros (como array) para la accion si fuese necesarios
+ */
+ESKUP.sendMessageToIESKUP = function(idIframe,command,params){
+    params = params||false;
+    if(document.getElementById(idIframe) != null){
+        var win = document.getElementById(idIframe).contentWindow;
+        var message = "{'id':'" + idIframe + "','command':'"+command+"'";
+        if(params && Array.isArray(params)){
+            message += ",'params':['"+params.join("','")+"']}";
+        }else{
+            message +=  "}";    
+        }
+        win.postMessage(message,'*');
+    }
+}
+ESKUP.addEvent = function (el,type,handler){
+    if (el.addEventListener) {
+        el.addEventListener(type,handler,false);
+    } else if(el.attachEvent) {
+        el.attachEvent('on'+type,handler);
+    } else {
+        el['on'+type] = handler;
+    }
+}
+
+ESKUP.removeEvent = function (el,type,handler){
+    if (el.removeEventListener) {
+        el.removeEventListener(type,handler,false);
+    } else if(el.detachEvent){
+        el.detachEvent('on'+type,handler);
+    }else {
+        el['on'+type]=null;
+    }
+}
+/* Enlazamos el evento para comunicar mensajes al iframe hijo */
+ESKUP.lanzaEventosRecarga = function(idIframe){
+    ESKUP.addEvent(window,'focus',function(){ESKUP.sendMessageToIESKUP(idIframe,'recargaRapida');});
+    ESKUP.addEvent(window,'blur',function(){ESKUP.sendMessageToIESKUP(idIframe,'recargaLenta');});
+}
+
+ESKUP.files = {
+    pending   : Array(),
+    loaded    : {},
+    isLoading : null,
+    current   : null,
+
+    loader    : function() {
+        if (!ESKUP.files.current) {
+            if (ESKUP.files.pending.length) {
+                var obj = ESKUP.files.pending.shift();
+                if (typeof ESKUP.files.loaded[obj.src] == 'undefined') {
+                    if (obj.type == "js" || obj.type == "css") {
+                        ESKUP.files.current = obj.src;
+                        var tag = null;
+                        if (obj.type == "js") {
+                            tag = document.createElement("script");
+                            tag.setAttribute("type", "text/javascript");
+                            tag.setAttribute("src", obj.src);
+                        }
+                        if (obj.type == "css") {
+                            tag = document.createElement("link")
+                            tag.setAttribute("rel", "stylesheet")
+                            tag.setAttribute("type", "text/css")
+                            tag.setAttribute("href", obj.src)
+                        }
+                        tag.loaded = 0;
+                        tag.onload = tag.onerror = tag.onreadystatechange = function() {
+                            if ((tag.readyState && !(/^c|loade/.test(tag.readyState))) || tag.loaded) return;
+                            tag.onload = tag.onreadystatechange = null
+                            tag.loaded = 1
+                            ESKUP.files.loaded[ESKUP.files.current] = 1;
+                            ESKUP.files.current = null;
+                            if (typeof obj.callback == 'function') {
+                                obj.callback();
+                            }
+                        }
+                        var _head  = document.head || document.getElementsByTagName('head')[0];
+                        _head.appendChild(tag);
+                    }
+                } else {
+                    // ya tenemos obj.src, si hay callback lo ejecutamos
+                    if (typeof obj.callback == 'function') {
+                        obj.callback();
+                    }
+                }
+            } else {
+                clearInterval(ESKUP.files.isLoading);
+                ESKUP.files.isLoading = null;
+            }
+        }
+    },
+    start   : function() {
+        if (!ESKUP.files.isLoading) {
+            ESKUP.files.isLoading = setInterval(ESKUP.files.loader, 100);
+        }
+    },
+
+    add     : function(src, type, callback) {
+        var obj = { src: src, type: type, callback: callback };
+        ESKUP.files.pending.push(obj);
+        ESKUP.files.start();
+    }
+}
+
+/**
+ * Funcion que ejecuta las acciones en la carga del widget
+ * -recibe 'frameId' el id del elemento donde se carga 
+ * -opcionalmente 'nocheckparams' , si se recibe no se miraran los popsibles parametros especiales 
+ *  que vengan detras de #  
+ */
+ESKUP.initGhvWidgetESKUP = function(frameId,nocheckparams) {
+    //comprobamos que no es una peticion especial que oblige a cambiar el id del iframe
+    if(typeof nocheckparams == 'undefined'){
+         frameId = ESKUP.checkSpecialParams(frameId);
+    }
+    // Asociamos los eventos "message" a la ventana para el paso de mensaje entre iframes
+    ESKUP.addEvent(window,"message",ESKUP.receiveMessageESKUP);
+    
+    if (document.getElementById(frameId)) {
+        var iFrameObj = document.getElementById(frameId);
+        if (iFrameObj.scrolling == 'no') {
+            var regExpLocationHost = new RegExp(location.host, "i");
+            // Si es un navegador moderno (o un IE antiguo pero el iframe esta en el mismo dominio)
+            if (regExpLocationHost.test(iFrameObj.src) || !ESKUP.isIE || (ESKUP.isIE && ESKUP.isIE >= 8)) {
+                iFrameObj.scrolling = "no";
+                iFrameObj.style.overflow = "hidden";
+            }
+        }
+        
+    }
+    ESKUP.lanzaEventosRecarga(frameId);
+}
+
+/**
+ * Funcion que comprueba si en la url llegan parametros especiales.
+ * Valores a partir de '#' * separados por ';'.
+ * De existir los analiza ya que llega informacion para compartir enlace.
+ * Se cambia el widget indicado en skp_idwdg por el widget de mensaje unico para el valor de skp_idmsg
+ * ejurl:http://dominio/noticia.html#skp_idmsg=1432727031-112df583ccec18a8edde3454b8736a66;skp_idwdg=comentarios_noticia_1305545040-5c4752c5ca3c2c4631f741b41eb9b203
+ * opcionalmente se podran enviar los parametros para el widget skp_paramwdg 'SIEMPRE' encodeados
+ * %26gww%3D460%26gcss%3D%2Festilos%2Fv1.x%2Fv1.4%2Feskup_mensaje_conversacion.css
+ */
+ESKUP.checkSpecialParams = function(frameId){
+    var paramwdg = '&gww=460';
+    var valsparam;var paramsKeyValue;var idmsg;var idwdg;
+    var fold = frameId; 
+    if(window.location.href.indexOf("#") > 0 && document.getElementById(frameId)){
+       var urlS = window.location.href.split('#');
+       var specialParams = urlS[1].split(';');
+         paramwdg = '&gurl='+encodeURIComponent(urlS[0]);   
+         for (var i = 0; i < specialParams.length; i++){
+            paramsKeyValue = specialParams[i].split('=');
+            valsparam = paramsKeyValue[1];
+            
+            switch(paramsKeyValue[0]){
+                case 'skp_idmsg':
+                    idmsg = valsparam;
+                break;
+                case 'skp_idwdg':
+                    idwdg = valsparam;
+                break;   
+                case 'skp_paramwdg':
+                    paramwdg += decodeURIComponent(valsparam);
+                break;
+                default:
+                break;
+            }
+       }
+        
+       //Solo en el caso de coincidir el id del iframe con el del widget enviado cambiamos src o data-src (en comentarios)  
+       if(frameId == idwdg){
+            //respaldamos el id original para pintar un enlace a la vuelta a el contenido original
+            var frameIdOri = frameId;
+            var srcChangeDomain = url_base_srcori = '';
+            var srcOri = '';
+            var iFrameObj = document.getElementById(frameId);
+            var textBackLink =  "Ver todos los comentarios";  
+            var backlink =  "backlink_wc";
+            var classbacklink = "ed_entrevista_completa";
+            //cambiamos si es sobre comentario('data_src') o sobre el resto ('src')
+            if(iFrameObj.src.indexOf('t.gif') >= 0){
+              srcOri = iFrameObj.getAttribute('data-src');
+              srcAtr = 'data-src';
+            }else{ 
+              srcOri = iFrameObj.getAttribute('src');
+              srcAtr = 'src';
+            }
+            
+            url_base_srcori = ESKUP.urlAnalisis(srcOri).url_base;
+            if(url_base_srcori != 'undefined' && url_base_srcori != null){
+                    srcChangeDomain = url_base_srcori;
+            } 
+            
+            iFrameObj.setAttribute(srcAtr,srcChangeDomain+'/Scripts/mensaje/mensaje_widget.html?msg='+idmsg+paramwdg);
+            iFrameObj.id = 'widget_mensajeunico_'+idmsg;
+            frameId = 'widget_mensajeunico_'+idmsg;
+            
+            // Creamos el nuevo elemento con el enlace al retorno a ver todos los mensajes y lo añadimos
+            // antes del iframe
+
+            var linkBack = document.createElement("div");
+            linkBack.innerHTML = " <div id='div"+backlink+"' style='display:none' class='"+classbacklink+"'><a id='"+backlink+"' onClick='ESKUP.changeFrameSrcClean(\""+frameId+"\",\""+srcOri+"\",\""+frameIdOri+"\",\""+backlink+"\")' href='javascript:void(0)'>"+textBackLink+"</a></div>";
+            iFrameObj.parentNode.insertBefore(linkBack,iFrameObj.nextSibling);
+ 
+            //Para posicionar el marcador forzamos durante 3 sg que se resitue. 
+            var  tiempoinicial = Date.now()+3000;
+            var intervaloPosicion = setInterval(
+                function(){
+                    ESKUP.setScrollToWidgetESKUP(frameId,-100);
+                    if(Date.now() > tiempoinicial){
+                            clearInterval(intervaloPosicion);
+                    }
+                },
+                100);
+        }
+    }
+    return frameId;
+}
+
+/*
+ * Funcion que elimina el enlace para cambio src y hace la llamada al cambio de src
+ */
+ESKUP.changeFrameSrcClean = function(frameId,src,frameIdOri,idEliminar){
+   //Eliminamos el enlace
+   var elementDelete = document.getElementById(idEliminar);
+   elementDelete.parentNode.removeChild(elementDelete);   
+
+   //Cambiamos el contenido del iframe y los ids
+   ESKUP.changeFrameSrc(frameId,src,frameIdOri);
+}
+
+/*
+ * Funcion que cambia el src de un iframe y el  id del mismo
+ * recibe el id actual el src nuevo y el id nuevo
+ */
+ESKUP.changeFrameSrc = function(frameId,src,frameIdnew){
+    var iFrameObj = document.getElementById(frameId)
+    iFrameObj.setAttribute('src',src);
+    iFrameObj.id = frameIdnew;
+    ESKUP.initGhvWidgetESKUP(frameIdnew,1);
+}
+
+ESKUP.setOnReceiveNumMensajes = function(frameId, callback) {
+    ESKUP.onReceiveNumMensajes[frameId] = callback;
+}
+
+ESKUP.setOnTrackWidgetNewInfo = function(frameId, callback) {
+    ESKUP.onTrackWidgetNewInfo[frameId] = callback;
+}
+
+ESKUP.setOnTrackWidgetNewComment = function(frameId, callback) {
+    ESKUP.onTrackWidgetNewComment[frameId] = callback;
+}
+/* funcion que a partir de una url nos da sus componentes */
+ESKUP.urlAnalisis = function(url_extract){
+    var url_datos = {url_limpia:'',url_base:'',url_special_params:'',url_params:'',url_params_obj:{}};
+    // La separamos por la doble barra
+    var url_pos = url_extract.indexOf('//');
+
+    // por un lado tenemos la url sin protocolos
+    url_datos.url_limpia = url_extract.substr(url_pos+2);
+
+    // y por otro lado el protocolo usado
+    url_datos.url_prot = url_extract.substr(0,url_pos+2);
+
+    // separamos todas las posibles carpetas
+    var url_split = url_datos.url_limpia.split('/');
+
+    // y obtenemos el dominio actual
+    url_datos.url_base = url_datos.url_prot + url_split[0];
+    
+    //buscamos parametros en la url
+    var url_sparamsAr = url_extract.split('#');
+    if(url_sparamsAr.length > 1){
+        url_datos.url_special_params = url_sparamsAr[1];    
+    }
+    var url_splitparamsAr = url_sparamsAr[0].split('?'); 
+    if(url_splitparamsAr.length > 1){
+        url_datos.url_params = url_splitparamsAr[1];
+        url_paramsAr = url_datos.url_params.split('&');
+        for(var c = 0; c < url_paramsAr.length ; c++){
+            url_param = url_paramsAr[c].split('=');
+            url_datos.url_params_obj[url_param[0]] = url_param[1];
+        }
+    }
+    return url_datos;
+}
+
+if (typeof ESKUP.urlsReceiveMessage == "undefined") {
+    ESKUP.urlsReceiveMessage = [];
+}
+if (typeof ESKUP.expUrlReceiveMessage == "undefined") {
+    ESKUP.expUrlReceiveMessage = [];
+}
+
+if (typeof ESKUP.onReceiveNumMensajes == "undefined") {
+    ESKUP.onReceiveNumMensajes = {};
+}
+if (typeof ESKUP.onTrackWidgetNewInfo == "undefined") {
+    ESKUP.onTrackWidgetNewInfo = {};
+}
+if (typeof ESKUP.onTrackWidgetNewComment == "undefined") {
+    ESKUP.onTrackWidgetNewComment = {};
+}
+
+ESKUP.expUrlReceiveMessage = ["cincodias.com","cadenaser.com","elpais.com","as.com","los40.","smoda.elpais.com","caracol.com.co","wradio.com.mx"];
+
+var gurl ='&gurl='+encodeURIComponent(window.location.href.split('#')[0]);
+var contentId = document.getElementById("comentarios_1573497644-309f401f544804353c0b0d72b742dd9c");
+contentId.innerHTML="<a name=\"a_comentarios_noticia_1573497644-309f401f544804353c0b0d72b742dd9c\" id=\"a_comentarios_noticia_1573497644-309f401f544804353c0b0d72b742dd9c\"></a>";
+contentId.innerHTML+="<iframe id=\"comentarios_noticia_1573497644-309f401f544804353c0b0d72b742dd9c\" src=\"https://as01.epimg.net/t.gif\" data-src=\"//as.com/Comentarios/comentarios.html?ghi=1573497644-309f401f544804353c0b0d72b742dd9c&mfo=0&gpi=0&gww=100%&ghw=1&gcss=/css/v1.x/v1.3/secciones/comentarios_v2.css&gjs=1&gll=1&gla=es&gjs=1"+gurl+"\" width=\"100%\" height=\"1\" frameborder=\"0\" scrolling=\"no\" marginwidth=\"0\" marginheight=\"0\"></iframe>";
+ESKUP.initGhvWidgetESKUP("comentarios_noticia_1573497644-309f401f544804353c0b0d72b742dd9c");

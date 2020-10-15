@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon name="close">
+      </ion-icon>
+    </ion-button>
+    <ion-title class="ion-text-center">{{curso}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-button  style="--background: #2d75d3; color: white;" (click)="pasar()" >
+    Pasar Alumnos 
+    <ion-icon  name="document-text-outline"></ion-icon>
+  </ion-button>
+  <div *ngFor="let user of usuarios">
+    <div *ngIf="user.tipo_usuario=='Estudiante' && user.curso==curso">
+      <ion-item >
+        <ion-label >
+          <h3><strong>Nombre de Alumno: </strong> {{user.nombre}} {{user.apellido}}</h3>
+          <h3><strong>Ci de Alumno: </strong> {{user.ci}}</h3>
+          <h3><strong>Telefóno de Alumno: </strong> {{user.numero_telefonico}}</h3>
+          <div *ngFor="let use of usuarios">
+            <div *ngIf="user.nombre_completo_tutor==use.nombre+' '+use.apellido">
+              <p><strong>Nombre de Tutor: </strong> {{use.nombre}} {{use.apellido}}</p>
+              <p><strong>Ci de Tutor: </strong> {{use.ci}}</p>
+              <p><strong>Telefono de Tutor: </strong> {{use.numero_telefonico}}</p>
+            </div>
+          </div>
+          <ion-button  style="--background: #2dd36f; color: white;" (click)="add_notas(user)">
+            Notas
+            <ion-icon  name="document-text-outline"></ion-icon>
+          </ion-button>
+        </ion-label>
+      </ion-item>
+    </div>
+  </div>
+</ion-content>

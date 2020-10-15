@@ -1,0 +1,54 @@
+
+<ion-header  [translucent]="true">
+  <ion-toolbar class="heder" >
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Unidad Educativa Toribio Claure</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="ion-padding" scroll-y="true">
+  
+  <ion-slides pager="true" *ngIf="ind=='1'" [options]="slideOpts">
+    <ion-slide  class="ionslide" *ngFor="let boletin of boletin_info_desli">
+      <div  class="slide ">
+        <div class="slide" [style.background-image]="'url('+boletin.urlImage+')'">
+        </div>
+        <div>
+          <p>{{boletin.content}}
+           </p>
+          <br>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+  <ion-slides pager="true"*ngIf="ind=='0'" [options]="slideOpts">
+    <ion-slide  style="background: rgba(201, 238, 206, 0.74);" >
+      <div  class="slide1 "  >
+      <div class="slide1"  [style.background-image]="'url(assets/imgs/default.png)'">
+        </div>
+        <div>
+          <br>
+        </div>
+       </div>
+    </ion-slide>
+    
+  </ion-slides>
+  <br>
+  <ion-list>
+    <h4 class="ion-padding">Informativo</h4>
+    <ion-grid>
+      <ion-row>
+        <ion-col sizeLg="4" sizeMd="6" sizeXs="6" *ngFor="let boletin of boletin_info; let i = index" >
+          <div class="img-wrapper1" [style.background-image]="'url('+boletin.urlImage+')'" (click)="preview_image(boletin.urlImage,boletin.content)">
+            <div>
+              <p>{{boletin.content}}
+              </p>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+</ion-content>

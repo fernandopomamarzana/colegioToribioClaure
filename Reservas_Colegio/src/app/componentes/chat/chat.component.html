@@ -1,0 +1,126 @@
+
+<ion-header class="header">
+  <ion-toolbar style="--background: transparent;">
+    <ion-button slot="start" fill="none" (click)="closeChat()">
+      <ion-icon style="color: white;"name="close">
+
+      </ion-icon>
+    </ion-button>
+    <ion-title style="white-space: pre-wrap !important;color: white;"class="ion-text-center">
+      {{chat.nombre}} {{chat.apellido}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content #content class="contenido ion-padding scroll">
+  <!-- <ul *ngIf="room||room1">
+    <li *ngFor="let mensaje of messages" color="primary">
+      {{mensaje.content}}
+      lol
+    </li>
+  </ul> -->
+
+  <ion-list style="background: transparent !important;" *ngIf="room ||room1" >
+    <div   *ngFor="let fech of fechas">
+
+      <div class="chat-status ion-text-center">
+          <span class="chat-content-center">{{fech}}</span>
+        </div> 
+        
+        <div *ngFor="let mensaje of messages"  no-lines >
+          <div class="chat-message" text-right *ngIf="mensaje.id == uid_session && mensaje.fecha==fech">
+            <div class="right-bubble chat-status">
+              <span class="msg-name ">tu |  {{mensaje.date}}</span>
+              
+              <span class="conten"text-wrap>{{mensaje.content}}</span>
+            </div>
+          </div>
+          <div class="chat-message" text-left *ngIf="mensaje.id != uid_session && mensaje.fecha==fech">
+            <div class="left-bubble chat-status">
+              <span class="msg-name">{{chat.nombre}} |  {{mensaje.date}}</span>
+              
+              <span class="conten"text-wrap>{{mensaje.content}}</span>
+            </div>
+          </div>
+          <p></p>
+        </div> 
+    </div>
+  </ion-list>
+</ion-content>
+
+
+
+
+
+
+<!-- <ion-content class="ion-padding">
+  
+  <ul *ngIf="room">
+    <li *ngFor="let mensaje of room.messages" color="primary">
+      {{mensaje.content}}
+    </li>
+  </ul>
+
+    <ion-list *ngIf="room">
+    <ion-item *ngFor="let mensaje of room.messages" no-lines>
+      
+      <ng-template #message>
+        <div class="chat-message" text-right *ngIf="uid_session==mensaje.id">
+          <div class="right-bubble">
+            <span class="msg-name">Tu</span>
+            <span class="msg-date">{{mensaje.date | date:'short'}}</span>
+            <p text-wrap>{{mensaje.content}}</p>
+          </div>
+        </div>
+        <div class="chat-message" text-left *ngIf=" uid_chat==mensaje.id">
+          <div class="left-bubble">
+            <span class="msg-name">{{chatnombre}}</span>
+            <span class="msg-date">{{mensaje.date | date:'short'}}</span>
+            <p text-wrap>{{mensaje.content}}</p>
+          </div>
+        </div> 
+      </ng-template>
+
+    </ion-item>
+  </ion-list> 
+
+
+</ion-content> -->
+
+
+<!-- <ion-footer  class=" footer ">
+  
+  <ion-item style="--background: transparent;background: transparent !important;">
+    <span>
+      <ion-icon (click)="emogis($event)"class="" style="font-size: 30px !important;" slot="start"color="success"  name="happy-outline">
+      </ion-icon>
+    </span><div class="caja">
+      <ion-textarea id="caja_texto" class="caja_texto" placeholder="Escribe un mensaje..." fill="outline" [(ngModel)]="msg">
+      </ion-textarea>
+    </div>
+    
+    <span>
+      <ion-icon (click)="mandar()"class="" style="font-size: 30px !important;" slot="end"color="success"  name="paper-plane-outline">
+      </ion-icon>
+    </span>
+      
+  </ion-item>
+</ion-footer> -->
+
+<ion-footer> 
+  <span>
+    <ion-icon (click)="emogis($event)"class="" style="color:#c7e5ee;font-size: 30px !important;" slot="start"  name="happy-outline">
+    </ion-icon>
+  </span>
+  <span class="text-area">
+    <textarea id="caja_texto" name="textarea" rows="10" cols="50"  placeholder="Escribe un mensaje..." fill="underline" [(ngModel)]="msg"></textarea>
+
+    <!-- <ion-textarea  class="caja_texto" placeholder="Escribe un mensaje..." fill="underline" [(ngModel)]="msg">
+    </ion-textarea> -->
+  </span>
+  <span >
+    <ion-icon (click)="mandar()"class="" style="color:#c7e5ee;font-size: 30px !important;" slot="end"  name="paper-plane-outline">
+    </ion-icon>
+  </span>
+</ion-footer>

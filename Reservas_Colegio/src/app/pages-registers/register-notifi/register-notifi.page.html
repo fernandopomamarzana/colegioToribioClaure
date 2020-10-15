@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon name="close">
+      </ion-icon>
+    </ion-button>
+    <ion-title class="ion-text-center">Registrar Notificación</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="cargo=='Director' || cargo=='Directora'" style="border-radius: 10px;padding: 0px 20px;"  >
+    <ion-item >
+      <ion-label><strong>Curso: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Curso--"   [(ngModel)]="curso_user" (ionChange)="tutores_curso(curso_user)" >
+        <div *ngFor="let curso of cursos" >
+          <ion-select-option  [value]="curso.name" >{{curso.name}}</ion-select-option>
+        </div>
+      </ion-select>
+    </ion-item>
+    <ion-item >
+      <ion-label><strong>Alumno: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Estudiante--"   [(ngModel)]="estudiante_user" (ionChange)="estudiantes_tutor(estudiante_user)" >
+        <ion-select-option *ngFor="let estudiante of estudiantes" [value]="estudiante" >{{estudiante.nombre}} {{estudiante.apellido}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item >
+      <ion-label><strong>Tutor: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Tutor--"   [(ngModel)]="padre_user"  >
+        <ion-select-option *ngFor="let tutor of tutores" [value]="tutor" >{{tutor.nombre}} {{tutor.apellido}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <hr>
+    <ion-label ><strong>Motivo:</strong></ion-label>
+    <hr>
+    <ion-item>
+      <textarea rows="10" cols="50" style="width: 100%; height: 150px;"  placeholder="Escribe un mensaje..." fill="underline" [(ngModel)]="msg"></textarea>
+    </ion-item>
+    
+    <ion-button color="primary" (click)="add_notificacion()">Enviar Notificación<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+    <div
+    *ngIf="al_nega=='1'" style="text-decoration-line: underline;cursor: pointer;text-align: center;color: red;background: rgb(230, 185, 185); width: 100%; height: 30px;border-radius: 10px;padding: 5px 5px;">
+      <span style="position:relative;">Complete el espacio vacios, son requeridos..</span>
+    </div>
+  </ion-list>
+
+<!-- BOLETIN PARA EL PADRE DEL PROFESOR -->
+  <ion-list *ngIf="cargo=='Profesor' || cargo=='Profesora'" style="border-radius: 10px;" class="ion-padding" >
+    <ion-item >
+      <ion-label><strong>Curso: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Curso--"   [(ngModel)]="curso_user" (ionChange)="tutores_curso(curso_user)" >
+        <div *ngFor="let curso of cursos_asesor" >
+          <ion-select-option  [value]="curso.name" >{{curso.name}}</ion-select-option>
+        </div>
+      </ion-select>
+    </ion-item>
+    <ion-item >
+      <ion-label><strong>Alumno: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Estudiante--"   [(ngModel)]="estudiante_user" (ionChange)="estudiantes_tutor(estudiante_user)" >
+        <ion-select-option *ngFor="let estudiante of estudiantes" [value]="estudiante" >{{estudiante.nombre}} {{estudiante.apellido}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item >
+      <ion-label><strong>Tutor: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Tutor--"   [(ngModel)]="padre_user" (ionChange)="tuto()" >
+        <ion-select-option *ngFor="let tutor of tutores" [value]="tutor" >{{tutor.nombre}} {{tutor.apellido}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <hr>
+    <strong>Motivo:</strong>
+    <hr>
+    <ion-item>
+      <textarea rows="10" cols="50" style="width: 100%; height: 150px;"  placeholder="Escribe un mensaje..." fill="underline" [(ngModel)]="msg"></textarea>
+    </ion-item>
+    
+    <ion-button color="primary" (click)="add_notificacion()">Enviar Notificación<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+
+    <div
+    *ngIf="al_nega=='1'" style="text-decoration-line: underline;cursor: pointer;text-align: center;color: red;background: rgb(230, 185, 185); width: 100%; height: 30px;border-radius: 10px;padding: 5px 5px;">
+      <span style="position:relative;">Complete el espacio vacios, son requeridos..</span>
+    </div>
+    <div
+    *ngIf="al_posi=='1'" style="text-decoration-line: underline;cursor: pointer;text-align: center;color: green;background: rgb(185, 230, 185); width: 100%; height: 30px;border-radius: 10px;padding: 5px 5px;">
+      <span style="position:relative;">Notificación Enviada..</span>
+    </div>
+  </ion-list>
+
+
+
+
+
+</ion-content>

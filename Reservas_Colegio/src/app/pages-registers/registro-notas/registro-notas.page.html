@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon name="close">
+      </ion-icon>
+    </ion-button>
+    <ion-title class="ion-text-center"><strong>Registrar nota para</strong></ion-title>
+    <ion-title class="ion-text-center">{{estudiante.nombre}} {{estudiante.apellido}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list style="border-bottom: 2px solid rgb(197, 197, 197); height: 300px;">
+    <hr>
+    <div>
+      <ion-label><strong>Materia del curso: </strong></ion-label>
+      <ion-item class="item-sel">
+        <ion-select class="select-full-width" mode="ios"  required interface="popover" placeholder="--Selecciona una Materia--"   [(ngModel)]="materia"  >
+          <div *ngFor="let materia of materias" >
+            <ion-select-option  [value]="materia.nombre_materia" >{{materia.nombre_materia}}</ion-select-option>
+          </div>
+        </ion-select>
+      </ion-item>
+    </div>
+    <hr>
+    <div>
+      <ion-label><strong>Trimestres: </strong></ion-label>
+      <ion-item class="item-sel">
+        <ion-select class="select-full-width" mode="ios"  required interface="popover" placeholder="--Selecciona un Trimestre--"   [(ngModel)]="trimestre"  >
+          <div *ngFor="let trimestre of trimestres" >
+            <ion-select-option  [value]="trimestre" >{{trimestre}}</ion-select-option>
+          </div>
+        </ion-select>
+      </ion-item>
+    </div>
+    <hr>
+    <ion-button color="primary" (click)="add_notas()">Registrar Nota<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+    
+    <div class="notas" >
+      <ion-label ><strong>Nota 1-100:</strong></ion-label>
+      <ion-item class="item-input">
+        <ion-input  placeholder="Nota" [(ngModel)]="nota" required #autofocus maxlength="5" (keyup)="inputVa($event)"></ion-input>
+      </ion-item>
+    </div>  
+<br>
+    <div class="alertas">
+      <div (click)="limpiar_datos()"
+      *ngIf="aler_posi==1"  style="text-decoration-line: underline;cursor: pointer;text-align: center;color: green;background: rgb(185, 230, 185); width: 100%; height: 40px;border-radius: 10px;padding: 8px 5px;">
+        <span style="position:relative;">Nota registrada correctamente...</span>
+      </div>
+      <div (click)="desaparecer()"
+      *ngIf="aler_nega==1" style="text-decoration-line: underline;cursor: pointer;text-align: center;color: red;background: rgb(230, 185, 185); width: 100%; height: 40px;border-radius: 10px;padding: 8px 5px;">
+        <span style="position:relative;">Complete los espacion vacios, son requeridos..</span>
+      </div>
+    </div>
+  </ion-list>
+  
+  
+  <ion-list class="ion-padding">
+    <ion-button  color="secondary" (click)="verificar_notas()">Verificar notas<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+      <ion-button  color="secondary" (click)="add_asistencia()">Faltas<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+      
+  </ion-list>
+  
+</ion-content>

@@ -1,0 +1,214 @@
+/*.contenido{
+  background: transparent url("../../assets/imgs/wallpaper/3.jpg");
+  background-position-x: center;
+  background-position-y: 0px;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  //content: "";
+  position: absolute;
+}*/
+$phone-width: 480px;
+ $tablet-width: 768px;
+ $desktop-width: 1024px;
+ 
+.contenido {
+  --background: transparent;
+  background: transparent url("../../../assets/imgs/wallpaper/17.jpg");
+  background-position-x: 100%;
+  background-position-y: 100%;
+  //background: url(../../../assets/imgs/wallpaper/12.png);
+  //0 0/100% 100% no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+ion-footer {
+  background: white;
+  ion-icon {
+    padding: 10px ;
+    font-size: 20px;
+    color: #265463;;
+  }
+}
+.header
+{
+  //background: transparent url("../../../assets/imgs/wallpaper/17.jpg");
+  background: #022831;
+  background-position-x: 100%;
+  background-position-y: 100%;
+  background-size: cover;
+  border-bottom:1px solid #265463;
+  ion-toolbar{
+    padding: 0px 5px;
+    ion-button{
+      border-radius: 5px;
+      background: #033b47; 
+      width: 40px;
+      height: 40px;
+      font-size: 10px;
+    }
+  }
+}
+.footer
+{
+  //background: transparent url("../../../assets/imgs/wallpaper/1.jpg");
+  background-position-x: 100%;
+  background-position-y: 100%;
+  border-top: 1px solid #265463;
+  background-size: cover;
+  height: 15%;
+  position: relative;
+}
+ion-footer{
+  height: 60px;
+  
+  background: transparent url("../../../assets/imgs/wallpaper/16.jpg");
+  background-position-x: 100%;
+  background-position-y: 100%;
+  border-top: 1px solid white;
+  background-size: cover;
+  .text-area{
+      
+    //background: #265463;
+    color: white;
+    position: relative;
+    
+    height:50px;
+    top: -25px;
+    left: 0px;
+    display: inline-flex;
+    
+    textarea{
+      resize: none;border-radius: 5px;
+      background: #265463;
+    }
+  }
+  @media  (min-width: #{$tablet-width})  
+  {
+    .text-area{
+      width:71%;
+    }
+  }
+  @media  (min-width: 0px) and (max-width:#{$tablet-width}) 
+  {
+    .text-area{
+      width:70%;
+    }
+  }
+ 
+  
+}
+.conten{
+  display: block;
+  color: white;
+}
+.chat-status {
+  min-height: 49px;
+  .chat-date {
+    display: block;
+    font-size: 10px;
+    font-style: italic;
+    color: #fff;
+    text-shadow: 0px -1px 0px #222, 0px 1px 0px #aaa;
+    height: 15px;
+    left: 10%;
+    right:10%;
+  }
+  .chat-content-center {
+    padding: 5px 10px;
+    background-color: #e1e1f7;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #555;
+    height: 34px;
+    left: 10%;
+    right:10%;
+  }
+}
+.chat-message {
+  width: 80%;
+  top: 10%;
+  min-height: 40px;
+  
+  .right-bubble {
+      position: relative;
+      background: #265463;
+      border-top-left-radius: .5em;
+    border-bottom-left-radius: .9em;
+    border-bottom-right-radius: .9em;
+    //border-bottom: 5px solid white;
+    padding: 5px 10px 10px;
+    left: 20%;
+    top: 0px;
+    span.msg-name {
+      font-size: 11px;
+      font-weight: bold;
+      color: rgb(196, 196, 196);
+      border-bottom:1px solid rgb(255, 255, 255);
+    }
+    span.msg-date {
+      font-size: 10px;
+    }
+    span.conten{
+      font-size: 90%;
+    }
+  }
+
+  .right-bubble:after {
+      content: '';
+      position: absolute;
+      right:15px;
+      top: 13px;
+      width: 0;
+      height: 0;
+      border: 20px solid transparent;
+      border-left-color: #265463;
+      border-right: 0;
+      border-top: 0;
+      margin-top: -13.5px;
+      margin-right: -27px;
+      border-top-right-radius: 10px;
+
+  }
+  .left-bubble {
+      position: relative;
+      background: #636262;
+    border-top-right-radius: .9em;
+    border-bottom-left-radius: .9em;
+    border-bottom-right-radius: .9em;
+    //border-bottom: 5px solid white;
+    padding: 5px 10px 10px;
+    left: 5%;
+    span.msg-name {
+      font-size: 11px;
+      font-weight: bold;
+      color: rgb(196, 196, 196);
+      border-bottom:1px solid rgb(255, 255, 255);
+      
+
+    }
+    span.msg-date {
+      font-size: 10px;
+    }
+    span.conten{
+      font-size: 90%;
+    }
+  }
+
+  .left-bubble:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 13px;
+      width: 0px;
+      height: 0px;
+      border: 20px solid transparent;
+      border-right-color: #636262;
+      border-left: 0;
+      border-top: 0;
+      margin-top: -13.5px;
+      margin-left: -10px;
+      border-top-left-radius: 8px;
+  }
+}

@@ -1,0 +1,39 @@
+ion-row{
+    //border: 1px solid black;
+    ion-col{
+    
+            background-color: #F9FAFB;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+          
+    }
+}
+.item-sel{
+    position: relative;
+    width: 40% !important;
+    left: 30%;
+    .select-full-width{
+        text-align: center;
+        background: rgb(231, 231, 231);
+        max-width: 50% !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+    }
+    }
+  
+    @media (min-width: 0px) and (max-width: 450px) 
+  {
+    .item-sel{
+      position: relative;
+      width: 80% !important;
+      left: 10%;
+      .select-full-width{
+          text-align: center;
+          background: rgb(231, 231, 231);
+          max-width: 60% !important;
+          width: 100% !important;
+          padding-left: 0 !important;
+      }
+      }
+  }

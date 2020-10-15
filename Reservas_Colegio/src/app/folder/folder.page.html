@@ -1,0 +1,844 @@
+<ion-header  [translucent]="true">
+  <ion-toolbar class="heder" >
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ folder }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #container class="contenido ion-padding"  [fullscreen]="true" style="--background: transparent;">
+  
+  
+  <div (click)="cambiar_pass()"
+  *ngIf="state==0" style="text-decoration-line: underline;cursor: pointer;text-align: center;color: rgb(165, 12, 12);background: rgb(230, 185, 185); width: 100%; height: 45px;border-radius: 10px;padding: 8px 5px;">
+    <span style="position:relative;">Cambie su <strong><u>contraceña </u></strong> para aumentar la seguridad</span>
+  </div>
+  
+  
+  <ion-list  class="lista" *ngIf="folder=='Chats'">
+
+    <!-- <p class="ion-text-center" (click)="registrar()" style="color:white;text-decoration-line: underline;cursor: pointer;">Crear usuario</p>
+    <p class="ion-text-center" (click)="registrar_curso()" style="color:white;text-decoration-line: underline;cursor: pointer;">Crear curso</p> -->
+    <!-- CONVERSACION PARA EL TUTOR -->
+    <div *ngIf="cargo=='Tutor'">
+      <div *ngFor="let user of usuarios">
+        <div *ngIf="user.tipo_usuario=='Director'|| user.tipo_usuario=='Directora'">
+          <ion-item class="select" (click)="chat_dire(user)">
+            <ion-label><strong> Director/a:   </strong>{{user.nombre}} {{user.apellido}}</ion-label>
+          </ion-item>
+        </div>
+      </div>
+      
+<!-- este profesor tiene que ser el asesor -->
+      <ion-item class="select" >
+        <ion-label>profesor/a:</ion-label>
+        <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Usuario--"   [(ngModel)]="event.usuario" (ionChange)="onChange($event)" >
+          <ion-select-option *ngFor="let user of profesores" [value]="user" >{{user.nombre}} {{user.apellido}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item class="select" >
+        <ion-label>Cursos del hijo/a:</ion-label>
+        <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Usuario--"   [(ngModel)]="event.curso" (ionChange)="onChange_curso($event)" >
+          <div *ngFor="let curso of cursos_hijo">
+            <ion-select-option  [value]="curso" >{{curso.name}}</ion-select-option>
+          </div>
+        
+        </ion-select>
+      </ion-item>
+      <ion-content class="ion-padding" style="--background: transparent;width:100%; height: 520px; border: 2px solid #022229; border-radius: 5px;"   >
+        <div *ngFor="let curso of cursos_hijo">
+          <div *ngFor="let item of chatRooms"> 
+            <div *ngIf="curso.id==item.id">
+              <!-- CHAT DEL CURSO TUTOR-->
+              <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;" (click)="OpenChat_curso(item,$event)">
+                <ion-thumbnail slot="start" >
+                  <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+                </ion-thumbnail>
+                <ion-label>
+                  <h2 class="ion-text-center"><strong> -- Grupo: {{item.name}} --</strong></h2>
+                  <h2>{{item.name}}</h2>
+                  <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.messages[item.messages.length - 1].name}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+                  <p *ngIf="item.messages[item.messages.length - 1].id==id">tu : {{item.messages[item.messages.length - 1].content}}</p>
+      
+                </ion-label> 
+              </ion-item>
+            </div>
+          </div>
+        </div>
+        <p style="width: 100%;content: '--';"> </p>
+        <div *ngFor="let item of chatRooms">
+          <!--CHAT DEL TUTOR-->
+          <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;"*ngIf="item.name==undefined && id==item.uid1" (click)="OpenChat(item.uid2)">
+            
+            <ion-thumbnail slot="start" >
+              <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+            </ion-thumbnail>
+            <ion-label >
+              <h2>{{item.name2}}</h2>
+              <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+              <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name2}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+            </ion-label>
+          </ion-item> 
+  
+          <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative; width: 100%;"*ngIf="item.name==undefined && id==item.uid2" (click)="OpenChat(item.uid1)">  
+            <ion-thumbnail slot="start" >
+              <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{item.name1}}</h2>
+              <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+              <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name1}}</strong>: {{item.messages[item.messages.length - 1].content}}</p>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-content> 
+    </div>
+    <!-- FIN DE COMVERSACION TUTOR -->
+
+
+    <!-- CONVERSACION PARA EL ESTUDIANTE -->
+    <div *ngIf="cargo=='Estudiante'">
+      <h1>{{folder}}</h1>
+      <hr>
+      <ion-content class="ion-padding" style="--background: transparent;width:100%; height: 100px; border-radius: 5px;"   >
+        
+          <div *ngFor="let item of chatRooms"> 
+            <div *ngIf="item.name==curso">
+              <!-- CHAT DEL CURSO-->
+              <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;" (click)="OpenChat_curso(item,$event)">
+                <ion-thumbnail slot="start" >
+                  <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+                </ion-thumbnail>
+                <ion-label>
+                  <h2 class="ion-text-center"><strong> -- Grupo: {{item.name}} --</strong></h2>
+                  <h2>{{item.name}}</h2>
+                  <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.messages[item.messages.length - 1].name}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+                  <p *ngIf="item.messages[item.messages.length - 1].id==id">tu : {{item.messages[item.messages.length - 1].content}}</p>
+      
+                </ion-label> 
+              </ion-item>
+            </div>
+          </div>
+        
+      </ion-content> 
+    </div>
+    
+    <!-- FIN DE COMVERSACION ESTUDIANTE -->
+  
+
+    <!-- CONVERSACION PARA EL PROFESOR -->
+    <div *ngIf="cargo=='Profesor' || cargo=='Profesora'">
+      
+      <ion-item class="select" >
+        <ion-label>Padres:</ion-label>
+        <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Usuario--"   [(ngModel)]="event.usuario" (ionChange)="onChange($event)" >
+          <ion-select-option *ngFor="let padre of padres" [value]="padre" >{{padre.nombre}} {{padre.apellido}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="select" >
+        <ion-label>Cursos:</ion-label>
+        <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Usuario--"   [(ngModel)]="event.curso" (ionChange)="onChange_curso($event)" >
+          <div *ngFor="let curso of cursos">
+            <div *ngIf="curso.nombre_acesor==nombre_completo">
+              <ion-select-option  [value]="curso" >{{curso.name}}</ion-select-option>
+            </div>
+          </div>
+        </ion-select>
+      </ion-item>
+      <ion-content class="ion-padding" style="--background: transparent;width:100%; height: 520px; border: 2px solid #022229; border-radius: 5px;"   >
+        <div *ngFor="let curso of cursos">
+          <div *ngIf="curso.nombre_acesor==nombre_completo">
+            <div *ngFor="let item of chatRooms"> 
+              <div *ngIf="curso.id==item.id">
+                <!-- CHAT DEL CURSO PROFESOR-->
+                <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;" (click)="OpenChat_curso(item,$event)">
+                  <ion-thumbnail slot="start" >
+                    <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+                  </ion-thumbnail>
+                  <ion-label>
+                    <h2 class="ion-text-center"><strong> -- Grupo: {{item.name}} --</strong></h2>
+                    <h2>{{item.name}}</h2>
+                    <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.messages[item.messages.length - 1].name}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+                    <p *ngIf="item.messages[item.messages.length - 1].id==id">tu : {{item.messages[item.messages.length - 1].content}}</p>
+        
+                  </ion-label> 
+                </ion-item>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="width: 100%;content: '--';"> </p>
+        <div *ngFor="let item of chatRooms">
+          <!--CHAT DEL PROFESOR-->
+          <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;"*ngIf="item.name==undefined && id==item.uid1" (click)="OpenChat(item.uid2)">
+            
+            <ion-thumbnail slot="start" >
+              <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+            </ion-thumbnail>
+            <ion-label >
+              <h2>{{item.name2}}</h2>
+              <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+              <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name2}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+            </ion-label>
+          </ion-item> 
+  
+          <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative; width: 100%;"*ngIf="item.name==undefined && id==item.uid2" (click)="OpenChat(item.uid1)">  
+            <ion-thumbnail slot="start" >
+              <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+            </ion-thumbnail>
+            <ion-label >
+              <h2>{{item.name1}}</h2>
+              <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+              <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name1}}</strong>: {{item.messages[item.messages.length - 1].content}}</p>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-content> 
+    </div>
+    <!-- FIN DE COMVERSACION PROFESOR -->
+
+
+    <!-- CONVERSACION PARA EL DIRECTOR -->
+    <div *ngIf="cargo=='Director' || cargo=='Directora'">
+      
+      <ion-item class="select" >
+        <ion-label>Padres:</ion-label>
+        <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Usuario--"   [(ngModel)]="event.usuario" (ionChange)="onChange($event)" >
+          <div *ngFor="let usu of usuarios">
+            <div *ngIf="usu.tipo_usuario=='Tutor'">
+              <ion-select-option  [value]="usu" >{{usu.nombre}} {{usu.apellido}}</ion-select-option>
+            </div>
+          </div>
+        </ion-select>
+      </ion-item>
+      <ion-item class="select" >
+        <ion-label>Cursos:</ion-label>
+        <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Usuario--"   [(ngModel)]="event.curso" (ionChange)="onChange_curso($event)" >
+          <div *ngFor="let curso of cursos">
+            <ion-select-option  [value]="curso" >{{curso.name}}</ion-select-option>
+          </div>
+        </ion-select>
+      </ion-item>
+      <ion-content class="ion-padding" style="--background: transparent;width:100%; height: 520px; border: 2px solid #022229; border-radius: 5px;"   >
+        <div *ngFor="let curso of cursos">
+          <div *ngFor="let item of chatRooms"> 
+            <div *ngIf="curso.id==item.id">
+              <!-- CHAT DEL CURSO DIRECTOR-->
+              <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;" (click)="OpenChat_curso(item,$event)">
+                <ion-thumbnail slot="start" >
+                  <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+                </ion-thumbnail>
+                <ion-label>
+                  <h2 class="ion-text-center"><strong> -- Grupo: {{item.name}} --</strong></h2>
+                  <h2>{{item.name}}</h2>
+                  <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.messages[item.messages.length - 1].name}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+                  <p *ngIf="item.messages[item.messages.length - 1].id==id">tu : {{item.messages[item.messages.length - 1].content}}</p>
+      
+                </ion-label> 
+              </ion-item>
+            </div>
+          </div>
+        </div>
+        <p style="width: 100%;content: '--';"> </p>
+        <div *ngFor="let item of chatRooms">
+          <!--CHAT DEL DIRECTOR-->
+          <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;"*ngIf="item.name==undefined && id==item.uid1" (click)="OpenChat(item.uid2)">
+            
+            <ion-thumbnail slot="start" >
+              <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+            </ion-thumbnail>
+            <ion-label >
+              <h2>{{item.name2}}</h2>
+              <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+              <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name2}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+            </ion-label>
+          </ion-item> 
+  
+          <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative; width: 100%;"*ngIf="item.name==undefined && id==item.uid2" (click)="OpenChat(item.uid1)">  
+            <ion-thumbnail slot="start" >
+              <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+            </ion-thumbnail>
+            <ion-label >
+              <h2>{{item.name1}}</h2>
+              <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+              <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name1}}</strong>: {{item.messages[item.messages.length - 1].content}}</p>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-content> 
+    </div>
+    <!-- FIN DE COMVERSACION DIRECTOR -->
+
+    <!-- <ion-item class="select">
+      <ion-label>Usuario:</ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Usuario--"   [(ngModel)]="event.usuario" (ionChange)="onChange($event)" >
+        <ion-select-option *ngFor="let user of usuarios" [value]="user" >{{user.nombre}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <hr>
+    <ion-item class="select_curse">
+      <ion-label>Curso:</ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un Curso--"   [(ngModel)]="event.curso" (ionChange)="onChange_curso($event)" >
+        <ion-select-option *ngFor="let curso of cursos" [value]="curso" >{{curso.name}}</ion-select-option>
+      </ion-select>
+    </ion-item> -->
+    <hr>
+
+    <hr>
+    <!-- <ion-content class="ion-padding" style="--background: transparent;width:100%; height: 520px; border: 2px solid #022229; border-radius: 5px;"   >
+      <div *ngFor="let item of chatRooms">
+        CHAT DEL CURSo
+        <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;" *ngIf="item.name1==undefined && item.name2==undefined && (item.name==this.curso || this.curso=='Direccion')" (click)="OpenChat_curso(item,$event)">
+          <ion-thumbnail slot="start" >
+            <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+          </ion-thumbnail>
+          <ion-label>
+            <h2 class="ion-text-center"><strong> -- Grupo: {{item.name}} --</strong></h2>
+            <h2>{{item.name}}</h2>
+            <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.messages[item.messages.length - 1].name}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+            <p *ngIf="item.messages[item.messages.length - 1].id==id">tu : {{item.messages[item.messages.length - 1].content}}</p>
+
+          </ion-label> 
+        </ion-item>
+      </div>
+      <p style="width: 100%;content: '--';"> </p>
+      <div *ngFor="let item of chatRooms">
+        CHAT DEL USUARIO
+        <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative;; width: 100%;"*ngIf="item.name==undefined && id==item.uid1" (click)="OpenChat(item.uid2)">
+          
+          <ion-thumbnail slot="start" >
+            <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+          </ion-thumbnail>
+          <ion-label >
+            <h2>{{item.name2}}</h2>
+            <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+            <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name2}}</strong> : {{item.messages[item.messages.length - 1].content}}</p>
+          </ion-label>
+        </ion-item> 
+
+        <ion-item class="chat_user" style="--background: transparent;cursor: pointer;border-radius: 5px;position: relative; width: 100%;"*ngIf="item.name==undefined && id==item.uid2" (click)="OpenChat(item.uid1)">  
+          <ion-thumbnail slot="start" >
+            <img style="width: 100px; border-radius: 10px;" src="../../assets/imgs/logo.png">
+          </ion-thumbnail>
+          <ion-label >
+            <h2>{{item.name1}}</h2>
+            <p *ngIf="item.messages[item.messages.length - 1].id==id">tu: {{item.messages[item.messages.length - 1].content}}</p>
+            <p *ngIf="item.messages[item.messages.length - 1].id!=id"><strong>{{item.name1}}</strong>: {{item.messages[item.messages.length - 1].content}}</p>
+          </ion-label>
+        </ion-item>
+      </div>
+    </ion-content> -->
+
+  </ion-list>
+
+
+
+
+
+
+
+  <ion-list  class="lista" *ngIf="folder=='Menu'">
+    
+    <ion-slides pager="true" *ngIf="ind=='1'" [options]="slideOpts">
+      <ion-slide  class="ionslide" *ngFor="let boletin of boletin_info_desli">
+        <div  class="slide ">
+          <div class="slide" [style.background-image]="'url('+boletin.urlImage+')'">
+          </div>
+          <div>
+            <p>{{boletin.content}}
+             </p>
+            <br>
+          </div>
+        </div>
+      </ion-slide>
+    </ion-slides>
+    <ion-slides pager="true"*ngIf="ind=='0'" [options]="slideOpts">
+      <ion-slide  style="background: rgba(201, 238, 206, 0.74);" >
+        <div  class="slide1 "  >
+        <div class="slide1"  [style.background-image]="'url(assets/imgs/default.png)'">
+          </div>
+          <div>
+            <br>
+          </div>
+         </div>
+      </ion-slide>
+      
+    </ion-slides>
+    <br>
+    <ion-list>
+      <h4 class="ion-padding">Informativo</h4>
+      <ion-grid>
+        <ion-row>
+          <ion-col style="background: rgba(201, 238, 206, 0.74);" sizeLg="4" sizeMd="6" sizeXs="6" *ngFor="let boletin of boletin_info; let i = index" >
+            <!-- <div class="img-wrapper1" [style.background-image]="'url('+boletin.urlImage+')'" (click)="preview_image(i)"> -->
+              <div class="img-wrapper1" [style.background-image]="'url('+boletin.urlImage+')'" (click)="preview_image(boletin.urlImage,boletin.content)">
+              <div>
+                <p>{{boletin.content}}
+                </p>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list>
+  </ion-list>
+
+<!--NAVEGACION MENU PARA DIRECTORA-->
+
+  <h1 *ngIf="(folder=='Profesores' || folder=='Cursos' || folder=='Reportes') && (cargo!='Directora' && cargo!='Director')"> Error. No tiene los permisos para entrar a esta página</h1>
+  <div *ngIf="cargo=='Directora' || cargo=='Director'">
+    <ion-list  class="lista" *ngIf="folder=='Boletín Informativo'">
+      <h1>{{folder}}</h1>
+      <hr>
+      <ion-button color="primary" (click)="add_boletin_informativo()">Registrar boletín informativo<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+      <hr>
+      <!-- <ion-item *ngFor="let boletin of boletin_info" >
+        <ion-label>
+          <h3><strong>Contenido: </strong> {{curso.name}}</h3>
+          <p><strong>Fecha: </strong> {{curso.nombre_acesor}}</p>
+          <p><img [src]="boletin.urlImage" alt=""></p>
+          <ion-button class="visu">
+            Visualizar datos
+            <ion-icon  name="document-text-outline"></ion-icon>
+          </ion-button>
+        </ion-label>
+      </ion-item> -->
+      <h4>Deslizable</h4>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeLg="4" sizeMd="6" sizeXs="6" *ngFor="let boletin of boletin_info_desli" >
+            <div class="img-wrapper" [style.background-image]="'url('+boletin.urlImage+')'">
+              <span style="background: red;left: -40%;" (click)="seleccionar(boletin,'0')">
+                Quitar <ion-icon slot="start" [ios]="'checkmark' + '-outline'" [md]="'checkmark' + '-sharp'"></ion-icon>
+               </span>
+              <div>
+                <p>{{boletin.content}}</p>
+                
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <h4>Contenido</h4>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeLg="4" sizeMd="6" sizeXs="6" *ngFor="let boletin of boletin_info" >
+            <div class="img-wrapper" [style.background-image]="'url('+boletin.urlImage+')'">
+              <span (click)="seleccionar(boletin,'1')">
+                Seleccionar <ion-icon slot="start" [ios]="'checkmark' + '-outline'" [md]="'checkmark' + '-sharp'"></ion-icon>
+               </span>
+               <span style="background: red;" (click)="delete_info(boletin)">
+                <ion-icon slot="start" [ios]="'trash' + '-outline'" [md]="'trash' + '-sharp'"></ion-icon>
+              </span>
+              <div>
+                <p>{{boletin.content}}</p>
+                
+              </div>
+              
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list>
+
+    <ion-list  class="lista" *ngIf="folder=='Cursos'">
+      <h1>{{folder}}</h1>
+      <hr>
+      <ion-button color="primary" (click)="add_curso()">Registrar nuevo curso<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+      <hr>
+      <ion-item *ngFor="let curso of cursos" >
+        <ion-label>
+          <h3><strong>Curso: </strong> {{curso.name}}</h3>
+          <p><strong>Nombre del asesor: </strong> {{curso.nombre_acesor}}</p>
+          <ion-button class="visu" (click)="curse(curso)">
+            Visualizar datos
+            <ion-icon  name="document-text-outline"></ion-icon>
+          </ion-button>
+          <ion-button class="eli" (click)="delete_curso(curso.id)">
+            Eliminar
+            <ion-icon  name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+
+    <ion-list  class="lista" *ngIf="folder=='Profesores'">
+      <h1>{{folder}}</h1>
+      <hr>
+      <ion-button color="primary" (click)="add_profesores()">Registrar profesor<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon>
+      </ion-button>
+      <hr>
+      <div *ngFor="let profe of usuarios">
+        <div *ngIf="profe.tipo_usuario=='Profesor' || profe.tipo_usuario=='Profesora'">
+          
+          <ion-item >
+              <ion-label>
+                <h3><strong>Nombre {{profe.tipo_usuario}}: </strong> {{profe.nombre}} {{profe.apellido}}</h3>
+                <p><strong>Cedula de identidad: </strong> {{profe.ci}}</p>
+                <p><strong>Numero Telefónico: </strong> {{profe.numero_telefonico}}</p>
+                <p><strong>Domicilio: </strong> {{profe.domicilio}}</p>
+                <ion-button  style="--background: #2dd36f; color: white;" (click)="update_profesor(profe)">
+                  Editar datos
+                  <ion-icon  name="document-text-outline"></ion-icon>
+                </ion-button>
+                <ion-button style="--background: #eb445a; color: white;" (click)="delete_profe(profe.uid)">
+                  Eliminar
+                  <ion-icon  name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-label>
+          </ion-item>
+        </div>
+      </div >
+    </ion-list>
+
+    <ion-list  class="lista" *ngIf="folder=='Reportes'">
+      <h1>{{folder}}</h1>
+      <ion-item >
+        <ion-label > Cursos</ion-label>
+        <ion-select  mode="ios"  required interface="popover" placeholder="--Selecciona un Curso--"   [(ngModel)]="cur" (ionChange)="cursos_reporte()" >
+          <div *ngFor="let curso of cursos" >
+            <ion-select-option  [value]="curso" >{{curso.name}}</ion-select-option>
+          </div>
+        </ion-select>
+      </ion-item>
+      <hr>
+      <div *ngIf="indicador=='1'">
+        <ion-item color="primary" (click)="estu_aprobados(cur.name)">Alumnos aprobados del curso<ion-icon slot="start" [ios]="'print' + '-outline'" [md]="'print' + '-sharp'"></ion-icon></ion-item><br>
+        <ion-item color="primary" (click)="estu_reprobados(cur.name)">Alumnos reprobados del curso<ion-icon slot="start" [ios]="'print' + '-outline'" [md]="'print' + '-sharp'"></ion-icon></ion-item><br>
+        <ion-item color="primary" (click)="todos_estudiantes(cur.name)">Alumnos del curso<ion-icon slot="start" [ios]="'print' + '-outline'" [md]="'print' + '-sharp'"></ion-icon></ion-item>
+        <ion-item color="primary" (click)="materias_curso(cur.name)">Materias del curso<ion-icon slot="start" [ios]="'print' + '-outline'" [md]="'print' + '-sharp'"></ion-icon></ion-item>
+        </div>
+      <hr>
+    </ion-list>
+
+
+  </div>
+
+<!-- ES NEUTRAL PERTENECE A CARGO DIRECTORA Y CARGO PROFESOR -->
+<h1 *ngIf="folder=='Boletín Individual' && cargo!='Directora' && cargo!='Director' && cargo!='Profesora' && cargo!='Profesor'&& cargo!='Tutor'">No tiene los permisos para ingresar a esta pagina</h1>
+  
+<div *ngIf="cargo=='Directora' || cargo=='Director' || cargo=='Profesora' || cargo=='Profesor'">
+
+  <ion-list  class="lista" *ngIf="folder=='Boletín Individual'">
+    <h1>{{folder}}</h1>
+    <hr>
+      <ion-button color="primary" (click)="add_notificacion()">Registrar Boletín Individual<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon>
+      </ion-button>
+      <hr>
+      <div *ngFor="let notifi of notifica">
+        <ion-item >
+          <ion-label>
+            <h3><strong>Nombre del Padre: </strong>{{notifi.name}} </h3>
+            <p><strong>Nombre del Hijo: </strong>{{notifi.estudiante}} </p>
+            <p><strong>Curso del Hijo: </strong> {{notifi.curso}}</p>
+            <p><strong>Motivo: </strong> {{notifi.mesage}}</p>
+            <p><strong>Autor: </strong> {{notifi.autor}}</p>
+            
+            <ion-button style="--background: #eb445a; color: white;" (click)="delete_notifi(notifi.id)">
+              Eliminar
+              <ion-icon  name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-label>
+          
+        </ion-item>
+      </div>
+    <hr><hr>
+  </ion-list>
+
+</div>
+
+<!-- -------------------- -->
+
+
+<!--NAVEGACION MENU PARA PROFESOR O PROFESORA-->
+
+
+<br>
+  <h1 *ngIf="(folder=='Crear Nuevo Usuario' || folder=='Gestión de notas') && (cargo!='Profesor' && cargo!='Profesora')">No tiene los permisos para ingresar a esta pagina</h1>
+  <div *ngIf="cargo=='Profesor' || cargo=='Profesora'">
+    <ion-list class="user_list" class="lista" *ngIf="folder=='Crear Nuevo Usuario' ">
+      <h1>{{folder}}</h1>
+      
+      <hr>
+      <ion-list style="border-radius: 10px;" class="ion-padding">
+        <ion-item >
+          <p ><strong>Ci:</strong></p>
+          <ion-input slot="end"  placeholder="Cedula de identidad" [(ngModel)]="ci_user" required #autofocus maxlength="20" (keyup)="inputVa($event)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label ><strong>Nombre:</strong></ion-label>
+          <ion-input  slot="end" placeholder="Nombre" [(ngModel)]="nombre_user" required maxlength="20" (keyup)="inputVa_letras($event)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label ><strong>Apellido:</strong></ion-label>
+          <ion-input slot="end" placeholder="Apellido" [(ngModel)]="apellido_user" required maxlength="25" (keyup)="inputVa_letras($event)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label ><strong>Edad:</strong></ion-label>
+          <ion-input slot="end" placeholder="Edad" [(ngModel)]="edad" required maxlength="2" (keyup)="inputVa_numeros($event)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label ><strong>Numero telefonico:</strong></ion-label>
+          <ion-input slot="end" placeholder="00000000" [(ngModel)]="numero_telefonico_user" required maxlength="8" (keyup)="inputVa_numeros($event)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label ><strong>Domicilio:</strong></ion-label>
+          <ion-input slot="end" placeholder="Domicilio" [(ngModel)]="domicilio_user" maxlength="40"></ion-input>
+        </ion-item>
+        <ion-item >
+          <ion-label><strong>Tipo Usuario: </strong></ion-label>
+          <ion-select  mode="ios"  interface="popover" placeholder="--Selecciona una Opción--" required  [(ngModel)]="tipo_user" (ionChange)="onChange_estu(tipo_user)"  >
+            <ion-select-option *ngFor="let sel of studentorfather" [value]="sel" >{{sel}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="cont==1">
+          <ion-label><strong>Tutor: </strong></ion-label>
+          <ion-select  mode="ios"  interface="popover" placeholder="--Selecciona una Opción--" required  [(ngModel)]="tutor_user"  >
+            <div *ngFor="let user of usuarios" >
+              <div *ngIf="user.tipo_usuario=='Tutor'">
+                <ion-select-option  [value]="user.nombre+' '+user.apellido" >{{user.nombre}} {{user.apellido}}</ion-select-option>
+              </div>
+            </div>
+          </ion-select>
+        </ion-item>
+        <!-- <ion-item >
+          <ion-label><strong>Curso: </strong></ion-label>
+          <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Opción--"   [(ngModel)]="curso_user"  >
+            <div *ngFor="let curso of cursos" >
+              <div *ngIf="curso.nombre_acesor==nombre_completo">
+                <ion-select-option  [value]="curso.name" >{{curso.name}}</ion-select-option>
+              </div>
+            </div>
+          </ion-select>
+        </ion-item> -->
+
+        <ion-button color="primary" (click)="add_student()">Registrar Alumno y/o Tutor<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+        
+      
+      </ion-list>
+    </ion-list>
+
+    <ion-list class="user_list" class="lista" *ngIf="folder=='Inscribir Estudiante'">
+      <h1>{{folder}}</h1>
+      <ion-list style="border-radius: 10px;" class="ion-padding">
+        <ion-item >
+          <ion-label><strong>Alumno: </strong></ion-label>
+          <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Opción--"   [(ngModel)]="user_student"  >
+            <div *ngFor="let user of usuarios" >
+              <div *ngIf="user.tipo_usuario=='Estudiante' && user.curso==''">
+                <ion-select-option  [value]="user.uid" >{{user.nombre}} {{user.apellido}}</ion-select-option>
+              </div>
+            </div>
+          </ion-select>
+        </ion-item>
+        <ion-item >
+          <ion-label><strong>Curso: </strong></ion-label>
+          <ion-select mode="ios"  interface="popover" placeholder="--Selecciona una Opción--"   [(ngModel)]="curso_user"  >
+            <div *ngFor="let curso of cursos" >
+              <div *ngIf="curso.nombre_acesor==nombre_completo">
+                <ion-select-option  [value]="curso.name" >{{curso.name}}</ion-select-option>
+              </div>
+            </div>
+          </ion-select>
+        </ion-item>
+        <ion-button color="primary" (click)="add_curse_student()">Inscribir<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon></ion-button>
+
+      </ion-list>
+    </ion-list>
+      <div (click)="limpiar_datos()"
+      *ngIf="spa==1"  style="text-decoration-line: underline;cursor: pointer;text-align: center;color: green;background: rgb(185, 230, 185); width: 100%; height: 40px;border-radius: 10px;padding: 8px 5px;">
+        <span style="position:relative;">Usuario registrado correctamente...</span>
+      </div>
+      <div (click)="desaparecer()"
+      *ngIf="aler==1" style="text-decoration-line: underline;cursor: pointer;text-align: center;color: red;background: rgb(230, 185, 185); width: 100%; height: 40px;border-radius: 10px;padding: 8px 5px;">
+        <span style="position:relative;">Complete los espacion vacios, son requeridos..</span>
+      </div>
+
+
+
+
+    <ion-list class="user_list" class="lista" *ngIf="folder=='Gestión de notas'">
+      <h1>{{folder}}</h1>
+     
+      <div *ngFor="let curso of cursos" >
+        <div *ngIf="curso.nombre_acesor==nombre_completo">
+          <ion-item >
+            <ion-label >
+              <h3><strong>Curso: </strong> {{curso.name}}</h3>
+              <p><strong>Nombre del asesor: </strong> {{curso.nombre_acesor}}</p>
+              <ion-button  style="--background: #2dd36f; color: white;" (click)="estudiantes(curso.name)">
+                Visualizar datos
+                <ion-icon  name="document-text-outline"></ion-icon>
+              </ion-button>
+            </ion-label>
+          </ion-item>
+        </div>
+      </div>
+    </ion-list>
+
+    
+  </div>
+
+  <!-- NAVEGACION MENU PARA TUTOR -->
+
+  <h1 *ngIf="( folder=='Ver notas') && (cargo!='Tutor')">No tiene los permisos para ingresar a esta pagina</h1>
+  <div *ngIf="cargo=='Tutor'">
+    <ion-list class="user_list" class="lista" *ngIf="folder=='Boletín Individual' ">
+      <h1>{{folder}}</h1>
+      <hr>
+      <div *ngFor="let notifi of notifica_padre">
+        <ion-item>
+          <ion-label>
+            <h3><strong>Nombre del Padre: </strong>{{notifi.name}} </h3>
+            <p><strong>Nombre del Hijo: </strong>{{notifi.estudiante}} </p>
+            <p><strong>Curso del Hijo: </strong> {{notifi.curso}}</p>
+            <p><strong>Motivo: </strong> {{notifi.mesage}}</p>
+            <p><strong>Autor: </strong> {{notifi.autor}}</p>
+            <ion-button  style="--background: #2dd36f; color: white;"  (click)="preview_boletin(notifi)">
+              Ver boletín
+              <ion-icon  name="document-text-outline"></ion-icon>
+            </ion-button>
+          </ion-label>
+          
+        </ion-item>
+      </div>
+
+
+
+
+    </ion-list>
+
+    <ion-list class="user_list" class="lista" *ngIf="folder=='Ver notas'">
+      <h1>{{folder}}</h1>
+      <div *ngFor="let user of usuarios" >
+        <div *ngIf="user.nombre_completo_tutor==nombre_completo">
+          <ion-item >
+            <ion-label >
+              <h3><strong>Nombre: </strong> {{user.nombre}} {{user.apellido}}</h3>
+              <p><strong>Ci: </strong> {{user.ci}}</p>
+              <p><strong>Curso: </strong> {{user.curso}}</p>
+            <ion-button  style="--background: #2dd36f; color: white;" (click)="ver_notas(user)">
+              Visualizar Notas
+              <ion-icon  name="document-text-outline"></ion-icon>
+            </ion-button>
+            </ion-label>
+            
+          </ion-item>
+        </div>
+      </div>
+    </ion-list>
+    
+  </div>
+
+  <!-- NAVEGACION MENU PARA ESTUDIANTE -->
+  <h1 *ngIf="(folder=='Ver notas estudiante') && (cargo!='Estudiante')">No tiene los permisos para ingresar a esta pagina</h1>
+  <div *ngIf="cargo=='Estudiante'">
+     <ion-list class="user_list" class="lista" *ngIf="folder=='Ver notas estudiante'">
+       <!-- <h1>{{folder}}</h1> -->
+      <div>
+        <ion-label>
+          <ion-button slot="end" color="primary" (click)="faltas()">
+            Faltas
+            <ion-icon  name="document-text-outline"></ion-icon>
+          </ion-button>
+          <ion-label class="ion-text-center" >
+            <h1>HISTORIAL DE NOTAS 
+           </h1>
+            <h3><strong>Nombre: </strong> {{usua[0].nombre}} {{usua[0].apellido}}</h3>
+            <h3><strong>CI: </strong>{{usua[0].ci}}</h3>
+            <h3><strong>Curso: </strong>{{aux_cur[0]}}</h3>
+          </ion-label>
+        </ion-label>
+        <ion-item class="item-sel">
+          <ion-label><strong>Gestion: </strong></ion-label>
+          <ion-select class="select-full-width" mode="ios"  interface="popover" placeholder="--Selecciona una Opción--"   [(ngModel)]="gesti" (ionChange)="select(gesti)" >
+            <div *ngFor="let gestion of years" >
+              <ion-select-option  [value]="gestion" >{{gestion}}</ion-select-option>
+            </div>
+          </ion-select>
+        </ion-item>
+        <hr><hr><hr>
+      </div>
+      <ion-grid >
+          <ion-row class="cabeza">
+            <ion-col>
+              <div>
+                <strong>Materias</strong> 
+              </div>
+            </ion-col>
+            <ion-col>
+              <div>
+                <strong>1er Trimestre</strong> 
+              </div>
+            </ion-col>
+            <ion-col>
+              <div>
+                <strong>2do Trimestre</strong> 
+              </div>
+            </ion-col>
+            <ion-col>
+              <div>
+                <strong>3er Trimestre</strong> 
+              </div>
+            </ion-col>
+            <ion-col>
+              <div>
+                <strong>Promedio</strong> 
+              </div>
+            </ion-col>
+          </ion-row>
+
+
+        <div *ngFor="let materia of materias">
+          <ion-row>
+            <ion-col>
+              <div>
+                {{materia}}
+              </div>
+            </ion-col>
+            <ion-col>
+              <div *ngFor="let mate of trimestre1">
+                <div *ngIf="mate.materia==materia">
+                  {{mate.nota}}
+                </div>
+                
+              </div>
+            </ion-col>
+            <ion-col>
+              <div *ngFor="let mate of trimestre2">
+                <div *ngIf="mate.materia==materia">
+                  {{mate.nota}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div *ngFor="let mate of trimestre3">
+                <div *ngIf="mate.materia==materia">
+                  {{mate.nota}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div *ngFor="let prom of promedio">
+                <div *ngIf="prom.materia==materia">
+                  {{prom.promedio}}
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-grid>
+      
+      <p>Promedio anual: {{prom_anual}}</p>
+      <div *ngIf="prom_anual>51" style="background: #24ac5a; width: 100px;height: 25px;border-radius: 5px;">
+        <p style="padding: 4px 10px;color: white;">Aprobado</p>
+      </div>
+      <div *ngIf="prom_anual<51" style="background: #ac2424; width: 100px;height: 25px;border-radius: 5px;">
+        <p style="padding: 4px 10px;color: white;">Reprobado</p>
+      </div>
+    </ion-list>
+  </div>
+</ion-content>

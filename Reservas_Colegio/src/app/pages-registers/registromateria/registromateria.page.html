@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon style="color: black;"name="close">
+
+      </ion-icon>
+    </ion-button>
+    <ion-title>registromateria</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list *ngIf="tipo=='crear'">
+    <ion-item>
+      <ion-label ><strong>Nombre Materia:</strong></ion-label>
+      <ion-input slot="end" placeholder=" Nombre de la materia" slot="end" placeholder=" Nombre de la materia" [(ngModel)]="nombre_materia" required #autofocus maxlength="20" (keyup)="inputVa($event)"></ion-input>
+    </ion-item>
+
+    <ion-item >
+      <ion-label><strong>Profesor/a: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un profesor--"   [(ngModel)]="profesor"  >
+        <ion-select-option *ngFor="let profesor of profesores" [value]="profesor" >{{profesor}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button color="primary" (click)="add_materia()">Registrar materia<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon>
+    </ion-button>
+  </ion-list>
+
+  <ion-list *ngIf="tipo=='asignar'">
+    <ion-item>
+      <ion-label ><strong>Nombre Materia:</strong></ion-label>
+      <ion-input slot="end" placeholder=" Nombre de la materia" [(ngModel)]="nombre_materia" required #autofocus maxlength="20" (keyup)="inputVa($event)"></ion-input>
+    </ion-item>
+    <ion-item >
+      <ion-label><strong>Profesor/a: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un profesor--"   [(ngModel)]="profesor"  >
+        <ion-select-option *ngFor="let profesor of profesores" [value]="profesor" >{{profesor}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button color="primary" (click)="actulizar_materia()">Actualizar materia<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon>
+    </ion-button>
+  </ion-list>
+  
+  <ion-list *ngIf="tipo=='reasignar'">
+    <ion-item>
+      <ion-label ><strong>Nombre Materia:</strong></ion-label>
+      <ion-input slot="end" placeholder=" Nombre de la materia" [(ngModel)]="nombre_materia" required #autofocus maxlength="20" (keyup)="inputVa($event)"></ion-input>
+    </ion-item>
+    <ion-item >
+      <ion-label><strong>Profesor/a: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un profesor--"   [(ngModel)]="profesor"  >
+        <ion-select-option *ngFor="let profesor of profesores" [value]="profesor" >{{profesor}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button color="primary" (click)="actulizar_materia()">Actualizar materia<ion-icon slot="start" [ios]="'create' + '-outline'" [md]="'create' + '-sharp'"></ion-icon>
+    </ion-button>
+  </ion-list>
+
+</ion-content>

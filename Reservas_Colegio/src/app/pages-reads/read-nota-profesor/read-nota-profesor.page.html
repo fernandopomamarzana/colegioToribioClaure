@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon name="close">
+      </ion-icon>
+    </ion-button>
+    <ion-title class="ion-text-center">Seguimiento de Notas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="this.tipo=='select'">
+    <ion-item *ngFor="let nota of notas">
+      <ion-label >
+        <h3><strong>Nombre de la Materia: </strong> {{nota.materia}}</h3>
+        <h3><strong>Nota del Trimestre: </strong> {{nota.nota}} Pts.</h3>
+      </ion-label>
+    </ion-item>
+  </div>
+  
+
+<div *ngIf="this.tipo=='boton'">
+  <div>
+    <ion-item>
+      <ion-label class="ion-text-center" >
+        <h1>HISTORIAL DE NOTAS</h1>
+        <h3><strong>Nombre: </strong> {{estudiante.nombre}} {{estudiante.apellido}}</h3>
+        <h3><strong>CI: </strong>{{estudiante.ci}}</h3>
+        <h3><strong>Curso: </strong>{{estudiante.curso}}</h3>
+        
+      </ion-label>
+    </ion-item>
+    <hr><hr><hr>
+  </div>
+  <ion-grid >
+    <ion-row class="cabeza">
+      <ion-col size="4">
+        <div >
+          <strong>Materias</strong> 
+        </div>
+      </ion-col>
+      <ion-col size="2">
+        <div>
+          <strong>1er Trim.</strong> 
+        </div>
+      </ion-col>
+      <ion-col size="2">
+        <div>
+          <strong>2do Trim.</strong> 
+        </div>
+      </ion-col>
+      <ion-col size="2">
+        <div>
+          <strong>3er Trim.</strong> 
+        </div>
+      </ion-col>
+      <ion-col size="2">
+        <div>
+          <strong>Prom.</strong> 
+        </div>
+      </ion-col>
+    </ion-row>
+
+
+    <div *ngFor="let materia of materias">
+      <ion-row>
+        <ion-col size="4" style="font-size: 14px;">
+          <div>
+            {{materia}}
+          </div>
+        </ion-col>
+        <ion-col >
+          <div *ngFor="let mate of trimestre1">
+            <div *ngIf="mate.materia==materia">
+              {{mate.nota}}
+            </div>
+            
+          </div>
+        </ion-col>
+        <ion-col >
+          <div *ngFor="let mate of trimestre2">
+            <div *ngIf="mate.materia==materia">
+              {{mate.nota}}
+            </div>
+          </div>
+        </ion-col>
+        <ion-col >
+          <div *ngFor="let mate of trimestre3">
+            <div *ngIf="mate.materia==materia">
+              {{mate.nota}}
+            </div>
+          </div>
+        </ion-col>
+        <ion-col >
+          <div *ngFor="let prom of promedio">
+            <div *ngIf="prom.materia==materia">
+              {{prom.promedio}}
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      
+    </div>
+  </ion-grid>
+  <p>Promedio anual: {{prom_anual}}</p>
+  <div *ngIf="prom_anual>51" style="background: #24ac5a; width: 100px;height: 25px;border-radius: 5px;">
+    <p style="padding: 4px 10px;color: white;">Aprobado</p>
+  </div>
+  <div *ngIf="prom_anual<51" style="background: #ac2424; width: 100px;height: 25px;border-radius: 5px;">
+    <p style="padding: 4px 10px;color: white;">Reprobado</p>
+  </div>
+  
+</div> 
+</ion-content>

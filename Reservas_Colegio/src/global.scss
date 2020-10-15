@@ -1,0 +1,182 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+ /*@font-face{
+  font-family: Lora;
+  src : url('./assets/fonts/Lora-Italic.ttf')
+}
+*{
+  //font-family: 'Indie Flower';   2
+  font-family: 'Lora';
+}*/
+
+ $phone-width: 480px;
+ $tablet-width: 768px;
+ $desktop-width: 1024px;
+ /*$ popover-md-width: 320px;
+$ popover-ios-width: 320px;
+$ popover-wp-width: 320px;*/
+ /*.popover-wrapper {
+  width: 800px !important;
+  max-width: 800px !important;
+  $popover-ios-width: 800px;
+  }
+  .select-full-width{
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+}*/
+ion-toolbar{
+  --background: #E4FFBB;
+  
+}
+.add-notas{
+  .select-full-width{
+    max-width: 300px !important;
+    width: 300px  !important;
+    //padding-left: 0 !important;
+  }
+  .item-sel{
+    max-width: 50% !important;
+    width: 50%  !important;
+    //padding-left: 0 !important;
+  }
+  .item-input{
+    max-width: 20% !important;
+    width: 20%  !important;
+    //padding-left: 0 !important;
+  }
+}
+/*ion-input{
+  text-transform: capitalize;
+}*/
+ion-popover{
+    ion-backdrop{
+      opacity: 0.1 !important;
+      }
+    .popover-wrapper{
+    .popover-content{
+      position: absolute;
+
+    right: calc(100% - (98%)) !important;
+    width:80vw;
+    max-width:300px;
+    }
+    }
+}
+.modal{
+  .modal-wrapper{
+    border-radius: 8px;
+  }
+}
+
+ @media  (min-width: #{$tablet-width})  
+{
+    .modal-chat {
+        .modal-wrapper {
+            //transition: 5s;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            position: absolute;
+            width: 400px !important;
+            height: 500px !important;
+            top: calc(100% - (500px));
+            right: calc(100% - (98%)) !important;
+            //left: calc(100% - (500px)) ;
+        }
+       
+      }
+      .register-in{
+        ion-backdrop{
+          opacity: 0.3 !important;
+          }
+      }
+    .read-notes {
+        .modal-wrapper {
+            //transition: 5s;
+            border-radius: 5px;
+            width: 90% !important;
+            height:90% !important;
+        }
+        ion-backdrop{
+          opacity: 0.4 !important;
+          }
+      }
+    /*.register-inasistencia{
+        .modal-wrapper {
+          //transition: 5s;
+          border-radius: 5px;
+          width: 50% !important;
+          height: 20% !important;
+      }
+      ion-backdrop{
+        opacity: 0.4 !important;
+        }
+    }*/
+    .user{
+        .modal-wrapper {
+        border-top: 1px solid #f7f7f7;
+        border-left: 1px solid #ffffff;
+        border-right: 1px solid #ffffff;
+        }
+    }
+    .curse{
+        .modal-wrapper {
+        border-top: 1px solid #f7f7f7;
+        border-left: 1px solid #f7f7f7;
+        border-right: 1px solid #f7f7f7;
+        }
+    }
+    .pop-over-style{
+      
+      .popover-content {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        position: relative;
+        width: 400px !important;
+        height: 500px !important;
+        top: calc(100% - (500px));
+        right: calc(100% - (99%)) !important;
+        
+      }
+      ion-toolbar{
+          position: static;
+          
+        }
+  }
+}
+
+//entre 480 y 768
+@media (min-width: 0px) and (max-width: #{$tablet-width}) 
+{
+  .read-notes {
+    .modal-wrapper {
+        //transition: 5s;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        width: 100% !important;
+    }
+  }
+}
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";

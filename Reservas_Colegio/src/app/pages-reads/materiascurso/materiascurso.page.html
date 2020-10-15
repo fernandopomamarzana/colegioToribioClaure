@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="none" (click)="close()">
+      <ion-icon style="color: black;"name="close">
+
+      </ion-icon>
+    </ion-button>
+    <ion-title class="ion-text-center">Materias del curso: {{curso.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list style="height: 25%; ">
+    <ion-item class="item">
+      <ion-label><strong>Curso: </strong> </ion-label>
+      <ion-label slot="end">{{curso.name}}</ion-label>
+    </ion-item>
+    <ion-item >
+      <ion-label><strong>Profesor asesor: </strong></ion-label>
+      <ion-select mode="ios"  interface="popover" placeholder="--Selecciona un profesor--"   [(ngModel)]="profesor"  (ionChange)="onChange(profesor)">
+        <ion-select-option *ngFor="let profesor of profesores" [value]="profesor" >{{profesor}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+
+  <ion-button color="primary" (click)="add_materia()">Registrar nueva materia<ion-icon slot="start"  name="create-outline"></ion-icon></ion-button>
+
+  <ion-content style="width: 100%; height: 65%;border-top: 1px solid rgb(201, 201, 201);">
+    
+    <ion-list>
+      <ion-item-sliding id="item100">
+        <div *ngFor="let materia of materias">
+          <div *ngIf="materia.nombre_profesor=='Sin asignar'">
+            <ion-item style="--background: rgb(253, 242, 242);">
+              <ion-label>
+                <h2>Materia: {{materia.nombre_materia}}</h2>
+                <p>Profesor: {{materia.nombre_profesor}}</p>
+              </ion-label>
+              <ion-button (click)="asignar(materia)">
+                Asignar profesor
+                <ion-icon slot="end" name="document-text-outline"></ion-icon>
+              </ion-button>
+              <ion-button (click)="delete_materia(materia.id)" color="danger">
+                Eliminar
+                <ion-icon slot="end" name="trash-outline"></ion-icon>
+              </ion-button>
+              <!-- <ion-note slot="end">
+                10:45 AM
+              </ion-note> -->
+            </ion-item>
+          </div>
+          <div *ngIf="materia.nombre_profesor!='Sin asignar'">
+            <ion-item style="background: rgb(233, 159, 159);">
+              <ion-label>
+                <h2>Materia: {{materia.nombre_materia}}</h2>
+                <p>Profesor: {{materia.nombre_profesor}}</p>
+              </ion-label>
+              <ion-button (click)="reasignar(materia)">
+                Reasignar profesor
+                <ion-icon slot="end" name="document-text-outline"></ion-icon>
+              </ion-button>
+              <ion-button (click)="delete_materia(materia.id)" color="danger">
+                Eliminar
+                <ion-icon slot="end" name="trash-outline"></ion-icon>
+              </ion-button>
+              <!-- <ion-note slot="end">
+                10:45 AM
+              </ion-note> -->
+            </ion-item>
+          </div>
+        </div>
+    
+        <ion-item-options side="start">
+          <ion-item-option>
+            <ion-icon slot="icon-only" name="heart"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+    
+        <ion-item-options side="end">
+          <ion-item-option color="danger">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+          <ion-item-option>
+            <ion-icon slot="icon-only" name="star"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+
+    </ion-list>
+  </ion-content>
+</ion-content>
